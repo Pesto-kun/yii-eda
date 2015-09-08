@@ -73,6 +73,7 @@ CREATE TABLE `dish` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `status` int(1) NOT NULL DEFAULT '1',
   `restaurant_id` int(11) UNSIGNED,
+  `food_type_id` int(11) UNSIGNED,
   `name` varchar(255) NOT NULL,
   `image_id` int(11) UNSIGNED,
   `weight` int(11) UNSIGNED,
@@ -84,6 +85,11 @@ ALTER TABLE `dish`
   FOREIGN KEY (`restaurant_id`)
   REFERENCES `restaurant` (`id`)
   ON DELETE CASCADE;
+ALTER TABLE `dish`
+  ADD CONSTRAINT `dish_food_type`
+  FOREIGN KEY (`food_type_id`)
+  REFERENCES `food_type` (`id`)
+  ON DELETE SET NULL;
 
 #Заказ
 CREATE TABLE `order` (

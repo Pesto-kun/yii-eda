@@ -48,8 +48,8 @@ class Dish extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Status',
-            'restaurant_id' => 'Restaurant ID',
+            'status' => 'Enable',
+            'restaurant_id' => 'Restaurant',
             'name' => 'Name',
             'image_id' => 'Image ID',
             'weight' => 'Weight',

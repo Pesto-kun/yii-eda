@@ -44,7 +44,7 @@ class FoodType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Status',
+            'status' => 'Enable',
             'name' => 'Name',
             'image_id' => 'Image ID',
         ];

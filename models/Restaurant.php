@@ -48,7 +48,7 @@ class Restaurant extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Status',
+            'status' => 'Enable',
             'city_id' => 'City',
             'name' => 'Name',
             'image_id' => 'Image',

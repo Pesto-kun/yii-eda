@@ -15,6 +15,8 @@ $cities = ArrayHelper::map(app\models\City::find()->asArray()->all(), 'id', 'nam
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'status')->checkbox() ?>
+
     <?= $form->field($model, 'city_id')->dropDownList($cities, ['prompt' => '- Выберите город -'])?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
