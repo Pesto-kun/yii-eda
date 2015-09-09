@@ -64,6 +64,7 @@ class RestaurantController extends Controller
     {
         $model = new Restaurant();
 
+        //TODO тут надо добавить транзакций
         if ($model->load(Yii::$app->request->post())) {
             if($model->save()) {
 
