@@ -18,6 +18,7 @@ use Yii;
  * @property Order[] $orders
  * @property City $city
  * @property RestaurantType[] $restaurantTypes
+ * @property FoodType[] $foodTypes
  */
 class Restaurant extends \yii\db\ActiveRecord
 {
@@ -88,4 +89,10 @@ class Restaurant extends \yii\db\ActiveRecord
         return $this->hasMany(RestaurantType::className(), ['restaurant_id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFoodTypes() {
+        return $this->hasMany(FoodType::className(), ['id' => 'food_type_id'])->viaTable('restaurant_type', ['restaurant_id' => 'id']);
+    }
 }

@@ -13,7 +13,7 @@ use Yii;
  * @property integer $image_id
  *
  * @property File $image
- * @property RestaurantType[] $restaurantTypes
+ * @property Restaurant[] $restaurants
  */
 class FoodType extends \yii\db\ActiveRecord
 {
@@ -61,8 +61,8 @@ class FoodType extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRestaurantTypes()
-    {
-        return $this->hasMany(RestaurantType::className(), ['food_type_id' => 'id']);
+    public function getRestaurants() {
+        return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])->viaTable('restaurant_type', ['food_type_id' => 'id']);
     }
+
 }

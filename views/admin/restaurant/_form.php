@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 
 $cities = ArrayHelper::map(app\models\City::find()->asArray()->all(), 'id', 'name');;
+$foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id', 'name');;
 ?>
 
 <div class="restaurant-form">
@@ -30,6 +31,8 @@ $cities = ArrayHelper::map(app\models\City::find()->asArray()->all(), 'id', 'nam
         4 => '4 звезды',
         5 => '5 звезд',
     ), ['prompt' => '- Рейтинг -']) ?>
+
+    <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

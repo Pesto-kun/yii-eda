@@ -2,6 +2,8 @@
 
 namespace app\controllers\admin;
 
+use app\models\FoodType;
+use app\models\RestaurantType;
 use Yii;
 use app\models\Restaurant;
 use yii\data\ActiveDataProvider;
@@ -62,8 +64,17 @@ class RestaurantController extends Controller
     {
         $model = new Restaurant();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->save()) {
+
+                foreach($_POST['Restaurant']['foodTypes'] as $_foodType) {
+                    $restaurantType = new RestaurantType();
+                    $restaurantType->food_type_id = $_foodType;
+                    $model->link('restaurantTypes', $restaurantType);
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,

@@ -36,7 +36,7 @@ ALTER TABLE `food_type`
 CREATE TABLE `restaurant` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `status` int(1) NOT NULL DEFAULT '1',
-  `city_id` int(11) UNSIGNED NOT NULL,
+  `city_id` int(11) UNSIGNED,
   `name` varchar(255) NOT NULL,
   `image_id` int(11) UNSIGNED,
   `rating` int(1) UNSIGNED,
