@@ -5,14 +5,14 @@ namespace app\controllers\admin;
 use Yii;
 use app\models\City;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use app\controllers\AdminController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * CityController implements the CRUD actions for City model.
  */
-class CityController extends Controller
+class CityController extends AdminController
 {
     public function behaviors()
     {

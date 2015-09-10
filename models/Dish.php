@@ -10,12 +10,14 @@ use Yii;
  * @property integer $id
  * @property integer $status
  * @property integer $restaurant_id
+ * @property integer $food_type_id
  * @property string $name
  * @property integer $image_id
  * @property integer $weight
  * @property string $price
  *
  * @property Restaurant $restaurant
+ * @property FoodType $foodType
  * @property OrderData[] $orderDatas
  */
 class Dish extends \yii\db\ActiveRecord
@@ -34,7 +36,7 @@ class Dish extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'restaurant_id', 'image_id', 'weight'], 'integer'],
+            [['status', 'restaurant_id', 'food_type_id', 'image_id', 'weight'], 'integer'],
             [['name', 'price'], 'required'],
             [['price'], 'number'],
             [['name'], 'string', 'max' => 255]
@@ -50,6 +52,7 @@ class Dish extends \yii\db\ActiveRecord
             'id' => 'ID',
             'status' => 'Enable',
             'restaurant_id' => 'Restaurant',
+            'food_type_id' => 'Food type',
             'name' => 'Name',
             'image_id' => 'Image ID',
             'weight' => 'Weight',
@@ -63,6 +66,13 @@ class Dish extends \yii\db\ActiveRecord
     public function getRestaurant()
     {
         return $this->hasOne(Restaurant::className(), ['id' => 'restaurant_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFoodType() {
+        return $this->hasOne(FoodType::className(), ['id' => 'food_type_id']);
     }
 
     /**

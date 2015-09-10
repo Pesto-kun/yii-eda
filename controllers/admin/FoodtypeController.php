@@ -5,14 +5,14 @@ namespace app\controllers\admin;
 use Yii;
 use app\models\FoodType;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use app\controllers\AdminController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * FoodtypeController implements the CRUD actions for FoodType model.
  */
-class FoodtypeController extends Controller
+class FoodtypeController extends AdminController
 {
     public function behaviors()
     {

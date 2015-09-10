@@ -24,11 +24,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'status',
-            'restaurant_id',
+//            'restaurant_id',
+            [
+                'attribute' => 'restaurant.name',
+                'label' => Yii::t('app', 'Restaurant')
+            ],
+            [
+                'attribute' => 'foodType.name',
+                'label' => Yii::t('app', 'Food type')
+            ],
             'name',
             'image_id',
-            // 'weight',
-            // 'price',
+             'weight',
+             'price',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

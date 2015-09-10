@@ -5,14 +5,14 @@ namespace app\controllers\admin;
 use Yii;
 use app\models\Dish;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use app\controllers\AdminController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * DishController implements the CRUD actions for Dish model.
  */
-class DishController extends Controller
+class DishController extends AdminController
 {
     public function behaviors()
     {

@@ -30,7 +30,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'status',
-            'restaurant_id',
+//            'restaurant_id',
+//            'food_type_id',
+            [
+                'label' => Yii::t('app', 'Restaurant'),
+                'value' => $model->restaurant->name
+            ],
+            [
+                'label' => Yii::t('app', 'Food type'),
+                'value' => $model->foodType->name
+            ],
             'name',
             'image_id',
             'weight',

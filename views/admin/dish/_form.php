@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 
 $restaurants = ArrayHelper::map(app\models\Restaurant::find()->asArray()->all(), 'id', 'name');;
+$foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id', 'name');;
 ?>
 
 <div class="dish-form">
@@ -18,6 +19,8 @@ $restaurants = ArrayHelper::map(app\models\Restaurant::find()->asArray()->all(),
     <?= $form->field($model, 'status')->checkbox() ?>
 
     <?= $form->field($model, 'restaurant_id')->dropDownList($restaurants, ['prompt' => '- Не выбрано -'])?>
+
+    <?= $form->field($model, 'food_type_id')->dropDownList($foodTypes, ['prompt' => '- Не выбрано -'])?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
