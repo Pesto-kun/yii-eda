@@ -2,8 +2,10 @@
 
 /* @var $this yii\web\View */
 /* @var $menu array */
+/* @var $restaurants array */
 
-use yii\bootstrap\Nav;
+//use yii\bootstrap\Nav;
+use yii\widgets\Menu;
 
 $this->title = 'My Yii Application';
 ?>
@@ -21,9 +23,10 @@ $this->title = 'My Yii Application';
                     $items[] = [
                         'label' => $_title,
                         'url' => ['index', 'id' => $_id],
+                        'active' => true,
                     ];
                 }
-                echo Nav::widget([
+                echo Menu::widget([
                     'options' => ['class' => 'nav nav-sidebar'],
                     'items' => $items,
                 ]);
@@ -31,7 +34,13 @@ $this->title = 'My Yii Application';
 
             </div>
             <div class="col-lg-9">
-                <p>Тут будет список заведений</p>
+                <?php foreach($restaurants as $_restaurant): ?>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <?= $_restaurant->name ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
 

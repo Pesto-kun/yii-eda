@@ -38,7 +38,7 @@ class Restaurant extends \yii\db\ActiveRecord
         return [
             [['status', 'city_id', 'image_id', 'rating'], 'integer'],
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 255]
+            [['name', 'work_time'], 'string', 'max' => 255]
         ];
     }
 
@@ -54,6 +54,7 @@ class Restaurant extends \yii\db\ActiveRecord
             'name' => 'Name',
             'image_id' => 'Image',
             'rating' => 'Rating',
+            'work_time' => 'Work time',
         ];
     }
 

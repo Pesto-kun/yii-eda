@@ -55,10 +55,10 @@ class SiteController extends Controller
 
         //Получаем список типов заведений
         $foodTypes = ArrayHelper::map(FoodType::find()->asArray()->all(), 'id', 'name');
-        $restaurants = ArrayHelper::map(Restaurant::find()->asArray()->all(), 'id', 'name');
+        $restaurants = Restaurant::findAll(['status' => 1]);
         return $this->render('index', [
             'menu' => $foodTypes,
-            'items' => $restaurants,
+            'restaurants' => $restaurants,
         ]);
     }
 

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\FoodType */
 
-$this->title = 'Create Food Type';
-$this->params['breadcrumbs'][] = ['label' => 'Food Types', 'url' => ['index']];
+$this->title = 'Добавление вида еды';
+$this->params['breadcrumbs'][] = ['label' => 'Виды еды', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="food-type-create">

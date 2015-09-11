@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'status',
-//            'city_id',
             [
                 'label' => Yii::t('app', 'City'),
                 'value' => $model->city->name
@@ -38,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'image_id',
             'rating',
+            'work_time',
         ],
     ]) ?>
 

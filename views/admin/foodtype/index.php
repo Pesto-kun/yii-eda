@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Food Types';
+$this->title = 'Виды еды';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="food-type-index">
@@ -14,20 +14,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Food Type', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
+                'label' => 'Статус'
+            ],
             'name',
-            'image_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => ['width' => '80'],
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 

@@ -42,8 +42,8 @@ class City extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Enable',
-            'name' => 'Name',
+            'status' => 'Включено',
+            'name' => 'Название',
         ];
     }
 

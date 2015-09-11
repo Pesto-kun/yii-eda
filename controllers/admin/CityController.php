@@ -41,17 +41,17 @@ class CityController extends AdminController
         ]);
     }
 
-    /**
-     * Displays a single City model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    /**
+//     * Displays a single City model.
+//     * @param integer $id
+//     * @return mixed
+//     */
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new City model.

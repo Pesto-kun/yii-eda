@@ -34,6 +34,8 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id
 
     <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes) ?>
 
+    <?= $form->field($model, 'work_time')->textInput(['maxlength' => true]) ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

@@ -37,12 +37,12 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Dashboard', 'url' => ['/admin/index']],
-            ['label' => 'City', 'url' => ['/admin/city/index']],
-            ['label' => 'Food type', 'url' => ['/admin/foodtype/index']],
-            ['label' => 'Restaurant', 'url' => ['/admin/restaurant/index']],
-            ['label' => 'Dish', 'url' => ['/admin/dish/index']],
+            ['label' => 'Города', 'url' => ['/admin/city/index']],
+            ['label' => 'Тип еды', 'url' => ['/admin/foodtype/index']],
+            ['label' => 'Заведения', 'url' => ['/admin/restaurant/index']],
+            ['label' => 'Блюда', 'url' => ['/admin/dish/index']],
             [
-                'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                'label' => 'Выход (' . Yii::$app->user->identity->username . ')',
                 'url' => ['/site/logout'],
                 'linkOptions' => ['data-method' => 'post']
             ],

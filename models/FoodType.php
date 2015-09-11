@@ -14,6 +14,7 @@ use Yii;
  *
  * @property File $image
  * @property Restaurant[] $restaurants
+ * @property Dish[] $dishes
  */
 class FoodType extends \yii\db\ActiveRecord
 {
@@ -44,9 +45,9 @@ class FoodType extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Enable',
-            'name' => 'Name',
-            'image_id' => 'Image ID',
+            'status' => 'Включено',
+            'name' => 'Название',
+            'image_id' => 'Изображение',
         ];
     }
 
@@ -63,6 +64,13 @@ class FoodType extends \yii\db\ActiveRecord
      */
     public function getRestaurants() {
         return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])->viaTable('restaurant_type', ['food_type_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDishes() {
+        return $this->hasMany(Dish::className(), ['id' => 'food_type_id']);
     }
 
 }

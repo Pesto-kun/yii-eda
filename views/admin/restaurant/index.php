@@ -24,23 +24,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'status',
+            'name',
             [
                 'attribute' => 'city.name',
                 'label' => Yii::t('app', 'City')
             ],
-            [
-                'value' => function ($data) {
-                    $arr = array();
-                    foreach($data->foodTypes as $_foodType) {
-                        $arr[] = $_foodType->name;
-                    }
-                    return implode(', ', $arr);
-                },
-                'label' => Yii::t('app', 'Food type')
-            ],
-            'name',
-            'image_id',
-            'rating',
+//            [
+//                'value' => function ($data) {
+//                    $arr = array();
+//                    foreach($data->foodTypes as $_foodType) {
+//                        $arr[] = $_foodType->name;
+//                    }
+//                    return implode(', ', $arr);
+//                },
+//                'label' => Yii::t('app', 'Food type')
+//            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
