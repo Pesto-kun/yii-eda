@@ -8,8 +8,8 @@ use yii\helpers\ArrayHelper;
 /* @var $model app\models\Dish */
 /* @var $form yii\widgets\ActiveForm */
 
-$restaurants = ArrayHelper::map(app\models\Restaurant::find()->asArray()->all(), 'id', 'name');;
-$foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id', 'name');;
+$restaurants = ArrayHelper::map(app\models\Restaurant::find()->asArray()->all(), 'id', 'name');
+$foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id', 'name');
 ?>
 
 <div class="dish-form">

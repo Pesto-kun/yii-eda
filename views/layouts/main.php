@@ -4,9 +4,9 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+//use yii\bootstrap\Nav;
+//use yii\bootstrap\NavBar;
+//use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
@@ -25,46 +25,25 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => 'My Company',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Admin', 'url' => ['/admin/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-//            ['label' => 'Contact', 'url' => ['/site/contact']],
-//            Yii::$app->user->isGuest ?
-//                ['label' => 'Login', 'url' => ['/site/login']] :
-//                [
-//                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-//                    'url' => ['/site/logout'],
-//                    'linkOptions' => ['data-method' => 'post']
-//                ],
-        ],
-    ]);
-    NavBar::end();
-    ?>
-
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <div class="row">
+            <p class="pull-left">Тут будут социальные кнопки</p>
+            <p class="pull-right">Тут будет строка поиска</p>
+        </div>
+        <div class="well row">
+            <div class="col-lg-4">Заказ еды в Симферополе</div>
+            <div class="col-lg-4">Логотип</div>
+            <div class="col-lg-4">+7(978)999-99-99</div>
+        </div>
         <?= $content ?>
     </div>
 </div>
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left"></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">Batter World, <?= date('Y') ?> г.<br><?= Html::a('О сервисе', ['/site/about']) ?></p>
     </div>
 </footer>
 

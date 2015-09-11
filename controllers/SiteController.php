@@ -8,6 +8,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\FoodType;
+use app\models\Restaurant;
+use yii\helpers\ArrayHelper;
 
 class SiteController extends Controller
 {
@@ -49,7 +52,14 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+
+        //Получаем список типов заведений
+        $foodTypes = ArrayHelper::map(FoodType::find()->asArray()->all(), 'id', 'name');
+        $restaurants = ArrayHelper::map(Restaurant::find()->asArray()->all(), 'id', 'name');
+        return $this->render('index', [
+            'menu' => $foodTypes,
+            'items' => $restaurants,
+        ]);
     }
 
     public function actionLogin()
