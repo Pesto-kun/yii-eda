@@ -4,6 +4,8 @@ namespace app\controllers\admin;
 
 use Yii;
 use app\models\FoodType;
+use app\models\File;
+//use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 use app\controllers\AdminController;
 use yii\web\NotFoundHttpException;
@@ -61,12 +63,22 @@ class FoodtypeController extends AdminController
     public function actionCreate()
     {
         $model = new FoodType();
+        $file = new File();
+
+        if(Yii::$app->request->isPost){
+            $file->uploadFile($file, 'file');
+
+            if ($file->isFileUploaded() && $file->validate() && $file->saveFile('food_type')) {
+                $model->image_id = $file->id;
+            }
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'file' => $file,
             ]);
         }
     }
@@ -80,12 +92,22 @@ class FoodtypeController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $file = new File();
+
+        if(Yii::$app->request->isPost){
+            $file->uploadFile($file, 'file');
+
+            if ($file->isFileUploaded() && $file->validate() && $file->saveFile('food_type')) {
+                $model->image_id = $file->id;
+            }
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'file' => $file,
             ]);
         }
     }
@@ -98,7 +120,13 @@ class FoodtypeController extends AdminController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
+        if($model->image_id) {
+            /** @var $file File */
+            $file = File::findOne($model->image_id);
+            $file->delete();
+        }
 
         return $this->redirect(['index']);
     }

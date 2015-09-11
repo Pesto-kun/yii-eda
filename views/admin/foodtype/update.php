@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\FoodType */
+/* @var $file app\models\File */
 
 $this->title = 'Редактирование вида еды: ' . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Виды еды', 'url' => ['index']];
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Редактирование';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'file' => $file,
     ]) ?>
 
 </div>
