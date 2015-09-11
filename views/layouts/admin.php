@@ -41,6 +41,11 @@ AppAsset::register($this);
             ['label' => 'Food type', 'url' => ['/admin/foodtype/index']],
             ['label' => 'Restaurant', 'url' => ['/admin/restaurant/index']],
             ['label' => 'Dish', 'url' => ['/admin/dish/index']],
+            [
+                'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post']
+            ],
         ],
     ]);
     NavBar::end();
