@@ -8,7 +8,7 @@
 use yii\widgets\Menu;
 use yii\helpers\Html;
 
-$this->title = 'My Yii Application';
+$this->title = 'Batter World';
 ?>
 <div class="site-index">
 
@@ -42,7 +42,7 @@ $this->title = 'My Yii Application';
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-8"><?= $_restaurant->name ?></div>
+                                <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
                                 <div class="col-lg-4 text-center"><?= $_restaurant->rating ?></div>
                             </div>
                             <?php
