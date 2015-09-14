@@ -119,7 +119,7 @@ class File extends \yii\db\ActiveRecord
 
             } while($this->checkFileExist($newFileName));
 
-            BaseFileHelper::createDirectory(dirname($this->getFullFilePath($newFileName)));
+            BaseFileHelper::createDirectory(dirname($this->getFilePath($newFileName)));
             $this->_newFileName = $newFileName;
         }
         return $this->_newFileName;
@@ -133,7 +133,7 @@ class File extends \yii\db\ActiveRecord
      * @return string
      */
     protected function getRealFilePath($filePath) {
-        return Yii::$app->getBasePath() . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $filePath;
+        return Yii::getAlias('@webroot/'.$filePath);
     }
 
     /**
@@ -144,19 +144,19 @@ class File extends \yii\db\ActiveRecord
      * @return bool
      */
     public function checkFileExist($fileName) {
-        return file_exists($this->getRealFilePath($this->getFullFilePath($fileName)));
+        return file_exists($this->getRealFilePath($this->getFilePath($fileName)));
     }
 
     /**
-     * Получение относительного пути файла от папки с файлами
+     * Получение локального пути файла
      *
      * @param $fileName
      *
      * @return string
      * @throws Exception
      */
-    protected function getFilePath($fileName) {
-        return $this->getFileDir() . $this->getFileNameWithSubDirs($fileName);
+    public function getFilePath($fileName) {
+        return $this->_coreFileDir . $this->getFileDir() . $this->getFileNameWithSubDirs($fileName);
     }
 
     /**
@@ -170,20 +170,6 @@ class File extends \yii\db\ActiveRecord
         return (isset($fileName[1]) ?
             $fileName[0] . DIRECTORY_SEPARATOR . $fileName[1] :
             '_' . $fileName[0]) . DIRECTORY_SEPARATOR . $fileName;
-    }
-
-    /**
-     * Получение полного пути файла до корня сайта
-     *
-     * @param $fileName
-     *
-     * @return string
-     * @throws Exception
-     * @throws \yii\base\Exception
-     */
-    protected function getFullFilePath($fileName) {
-        $path = $this->_coreFileDir . $this->getFilePath($fileName);
-        return $path;
     }
 
     /**
@@ -225,7 +211,7 @@ class File extends \yii\db\ActiveRecord
             $this->filesize = $this->getFile()->size;
             $this->filemime = $this->getFile()->type;
             $this->filepath = $this->getFilePath($this->getNewFileName());
-            if($this->getFile()->saveAs($this->getFullFilePath($this->getNewFileName()))) {
+            if($this->getFile()->saveAs($this->filepath)) {
                 return $this->save();
             }
         } catch(Exception $e) {

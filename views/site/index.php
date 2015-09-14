@@ -6,6 +6,7 @@
 
 //use yii\bootstrap\Nav;
 use yii\widgets\Menu;
+use yii\helpers\Html;
 
 $this->title = 'My Yii Application';
 ?>
@@ -19,16 +20,19 @@ $this->title = 'My Yii Application';
 
                 <?php
                 $items = array();
-                foreach($menu as $_id => $_title) {
+                foreach($menu as $_item) {
+                    $img =  is_object($_item->image) ?
+                        Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
                     $items[] = [
-                        'label' => $_title,
-                        'url' => ['index', 'id' => $_id],
-                        'active' => true,
+                        'label' => $img . $_item->name,
+                        'url' => ['index', 'id' => $_item->id],
+//                        'active' => true, //TODO активный пункт меню
                     ];
                 }
                 echo Menu::widget([
                     'options' => ['class' => 'nav nav-sidebar'],
                     'items' => $items,
+                    'encodeLabels' => false,
                 ]);
                 ?>
 

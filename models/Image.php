@@ -14,7 +14,7 @@ class Image extends File {
 
     public function getInitialPreview() {
         if(!empty($this->filename)) {
-            return DIRECTORY_SEPARATOR . $this->_coreFileDir . $this->filepath;
+            return DIRECTORY_SEPARATOR . $this->filepath;
         } else {
             return '';
         }
