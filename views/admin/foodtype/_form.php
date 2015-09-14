@@ -2,10 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\FoodType */
-/* @var $file app\models\File */
+/* @var $image app\models\Image */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -17,7 +18,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($file, 'file')->fileInput()->label('Иконка') ?>
+    <?php
+        $pluginOptions = [
+            'showPreview' => true,
+            'showCaption' => true,
+            'showRemove' => true,
+            'showUpload' => false,
+        ];
+        if($model->image_id) {
+            $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
+        }
+    ?>
+    <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

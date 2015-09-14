@@ -4,8 +4,7 @@ namespace app\controllers\admin;
 
 use Yii;
 use app\models\FoodType;
-use app\models\File;
-//use yii\web\UploadedFile;
+use app\models\Image;
 use yii\data\ActiveDataProvider;
 use app\controllers\AdminController;
 use yii\web\NotFoundHttpException;
@@ -63,13 +62,13 @@ class FoodtypeController extends AdminController
     public function actionCreate()
     {
         $model = new FoodType();
-        $file = new File();
+        $image = new Image();
 
         if(Yii::$app->request->isPost){
-            $file->uploadFile($file, 'file');
+            $image->uploadFile($image, 'file');
 
-            if ($file->isFileUploaded() && $file->validate() && $file->saveFile('food_type')) {
-                $model->image_id = $file->id;
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('food_type')) {
+                $model->image_id = $image->id;
             }
         }
 
@@ -78,7 +77,7 @@ class FoodtypeController extends AdminController
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'file' => $file,
+                'image' => $image,
             ]);
         }
     }
@@ -92,13 +91,17 @@ class FoodtypeController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $file = new File();
+        if($model->image) {
+            $image = $model->image;
+        } else {
+            $image = new Image();
+        }
 
         if(Yii::$app->request->isPost){
-            $file->uploadFile($file, 'file');
+            $image->uploadFile($image, 'file');
 
-            if ($file->isFileUploaded() && $file->validate() && $file->saveFile('food_type')) {
-                $model->image_id = $file->id;
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('food_type')) {
+                $model->image_id = $image->id;
             }
         }
 
@@ -107,7 +110,7 @@ class FoodtypeController extends AdminController
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'file' => $file,
+                'image' => $image,
             ]);
         }
     }
@@ -123,9 +126,9 @@ class FoodtypeController extends AdminController
         $model = $this->findModel($id);
         $model->delete();
         if($model->image_id) {
-            /** @var $file File */
-            $file = File::findOne($model->image_id);
-            $file->delete();
+            /** @var $image Image */
+            $image = Image::findOne($model->image_id);
+            $image->delete();
         }
 
         return $this->redirect(['index']);

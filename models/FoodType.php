@@ -12,7 +12,7 @@ use Yii;
  * @property string $name
  * @property integer $image_id
  *
- * @property File $image
+ * @property Image $image
  * @property Restaurant[] $restaurants
  * @property Dish[] $dishes
  */
@@ -56,7 +56,7 @@ class FoodType extends \yii\db\ActiveRecord
      */
     public function getImage()
     {
-        return $this->hasOne(File::className(), ['id' => 'image_id']);
+        return $this->hasOne(Image::className(), ['id' => 'image_id']);
     }
 
     /**

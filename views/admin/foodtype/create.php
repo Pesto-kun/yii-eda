@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\FoodType */
-/* @var $file app\models\File */
+/* @var $image app\models\Image */
 
 $this->title = 'Добавление вида еды';
 $this->params['breadcrumbs'][] = ['label' => 'Виды еды', 'url' => ['index']];
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'file' => $file,
+        'image' => $image,
     ]) ?>
 
 </div>
