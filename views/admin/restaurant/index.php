@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Restaurants';
+$this->title = 'Заведения';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="restaurant-index">
@@ -14,33 +14,38 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Restaurant', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить заведение', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
+                'label' => 'Статус'
+            ],
             'name',
             [
                 'attribute' => 'city.name',
-                'label' => Yii::t('app', 'City')
+                'label' => 'Город'
             ],
-//            [
-//                'value' => function ($data) {
-//                    $arr = array();
-//                    foreach($data->foodTypes as $_foodType) {
-//                        $arr[] = $_foodType->name;
-//                    }
-//                    return implode(', ', $arr);
-//                },
-//                'label' => Yii::t('app', 'Food type')
-//            ],
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'value' => function ($data) {
+                    $arr = array();
+                    foreach($data->foodTypes as $_foodType) {
+                        $arr[] = $_foodType->name;
+                    }
+                    return implode(', ', $arr);
+                },
+                'label' => 'Тип заведения'
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => ['width' => '80'],
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 

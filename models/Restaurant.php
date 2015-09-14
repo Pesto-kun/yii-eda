@@ -13,7 +13,11 @@ use Yii;
  * @property string $name
  * @property integer $image_id
  * @property integer $rating
+ * @property string $work_time
+ * @property float $delivery_price
+ * @property string $delivery_type
  *
+ * @property Image $image
  * @property Dish[] $dishes
  * @property Order[] $orders
  * @property City $city
@@ -37,8 +41,9 @@ class Restaurant extends \yii\db\ActiveRecord
     {
         return [
             [['status', 'city_id', 'image_id', 'rating'], 'integer'],
+            [['delivery_price'], 'number', 'numberPattern' => '/^\d+([\.\,]\d{1,2})?$/'],
             [['name'], 'required'],
-            [['name', 'work_time'], 'string', 'max' => 255]
+            [['name', 'work_time', 'delivery_type'], 'string', 'max' => 255]
         ];
     }
 
@@ -49,13 +54,23 @@ class Restaurant extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Enable',
-            'city_id' => 'City',
-            'name' => 'Name',
-            'image_id' => 'Image',
-            'rating' => 'Rating',
-            'work_time' => 'Work time',
+            'status' => 'Включено',
+            'city_id' => 'Город',
+            'name' => 'Название',
+            'image_id' => 'Изображение',
+            'rating' => 'Рейтинг',
+            'work_time' => 'Время работы',
+            'delivery_price' => 'Стоимость доставки',
+            'delivery_type' => 'Вид доставки',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImage()
+    {
+        return $this->hasOne(Image::className(), ['id' => 'image_id']);
     }
 
     /**

@@ -55,7 +55,7 @@ class SiteController extends Controller
 
         //Получаем список типов заведений
         $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->all();
-        $restaurants = Restaurant::findAll(['status' => 1]);
+        $restaurants = Restaurant::find()->where(['status' => 1])->with('image')->all();
         return $this->render('index', [
             'menu' => $foodTypes,
             'restaurants' => $restaurants,

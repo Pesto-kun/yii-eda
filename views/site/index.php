@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $menu array */
-/* @var $restaurants array */
+/* @var $restaurants \app\models\Restaurant[] */
 
 //use yii\bootstrap\Nav;
 use yii\widgets\Menu;
@@ -41,7 +41,18 @@ $this->title = 'My Yii Application';
                 <?php foreach($restaurants as $_restaurant): ?>
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <?= $_restaurant->name ?>
+                            <div class="row">
+                                <div class="col-lg-8"><?= $_restaurant->name ?></div>
+                                <div class="col-lg-4 text-center"><?= $_restaurant->rating ?></div>
+                            </div>
+                            <?php
+                            $img =  is_object($_restaurant->image) ?
+                                Html::img(DIRECTORY_SEPARATOR . $_restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
+                            ?>
+                            <div class="row"><?= $img ?></div>
+                            <div class="row">Акций не придумано</div>
+                            <div class="row"><?= $_restaurant->work_time ?></div>
+                            <div class="row"><?= \app\models\Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
                         </div>
                     </div>
                 <?php endforeach; ?>

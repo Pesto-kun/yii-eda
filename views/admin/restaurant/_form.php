@@ -1,11 +1,13 @@
 <?php
-
+use app\models\Delivery;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Restaurant */
+/* @var $image app\models\Image */
 /* @var $form yii\widgets\ActiveForm */
 
 $cities = ArrayHelper::map(app\models\City::find()->asArray()->all(), 'id', 'name');;
@@ -14,7 +16,7 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id
 
 <div class="restaurant-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'status')->checkbox() ?>
 
@@ -22,7 +24,18 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'image_id')->textInput() ?>
+    <?php
+    $pluginOptions = [
+        'showPreview' => true,
+        'showCaption' => true,
+        'showRemove' => true,
+        'showUpload' => false,
+    ];
+    if($model->image_id) {
+        $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
+    }
+    ?>
+    <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
 
     <?= $form->field($model, 'rating')->dropDownList(array(
         1 => '1 звезда',
@@ -32,12 +45,16 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id
         5 => '5 звезд',
     ), ['prompt' => '- Рейтинг -']) ?>
 
-    <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes) ?>
+    <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes)->label('Вид еды') ?>
 
     <?= $form->field($model, 'work_time')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'delivery_price') ?>
+
+    <?= $form->field($model, 'delivery_type')->dropDownList(Delivery::getOptions(), ['prompt' => '- Вид доставки -'])?>
+
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

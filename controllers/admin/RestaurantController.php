@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\models\FoodType;
+use app\models\Image;
 use app\models\RestaurantType;
 use Yii;
 use app\models\Restaurant;
@@ -43,17 +44,17 @@ class RestaurantController extends AdminController
         ]);
     }
 
-    /**
-     * Displays a single Restaurant model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    /**
+//     * Displays a single Restaurant model.
+//     * @param integer $id
+//     * @return mixed
+//     */
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new Restaurant model.
@@ -63,6 +64,15 @@ class RestaurantController extends AdminController
     public function actionCreate()
     {
         $model = new Restaurant();
+        $image = new Image();
+
+        if(Yii::$app->request->isPost){
+            $image->uploadFile($image, 'file');
+
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('restaurant')) {
+                $model->image_id = $image->id;
+            }
+        }
 
         //TODO тут надо добавить транзакций
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -72,10 +82,11 @@ class RestaurantController extends AdminController
                 $model->link('restaurantTypes', $restaurantType);
             }
 
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'image' => $image,
             ]);
         }
     }
@@ -89,12 +100,27 @@ class RestaurantController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->image) {
+            $image = $model->image;
+        } else {
+            $image = new Image();
+        }
+
+        if(Yii::$app->request->isPost){
+            $image->uploadFile($image, 'file');
+
+            //TODO удалять старый файл при обновлении
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('restaurant')) {
+                $model->image_id = $image->id;
+            }
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'image' => $image,
             ]);
         }
     }
@@ -107,7 +133,13 @@ class RestaurantController extends AdminController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
+        if($model->image_id) {
+            /** @var $image Image */
+            $image = Image::findOne($model->image_id);
+            $image->delete();
+        }
 
         return $this->redirect(['index']);
     }

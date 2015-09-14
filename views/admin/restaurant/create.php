@@ -5,9 +5,10 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Restaurant */
+/* @var $image app\models\Image */
 
-$this->title = 'Create Restaurant';
-$this->params['breadcrumbs'][] = ['label' => 'Restaurants', 'url' => ['index']];
+$this->title = 'Добавление заведения';
+$this->params['breadcrumbs'][] = ['label' => 'Заведения', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="restaurant-create">
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'image' => $image,
     ]) ?>
 
 </div>
