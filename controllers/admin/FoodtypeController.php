@@ -100,6 +100,7 @@ class FoodtypeController extends AdminController
         if(Yii::$app->request->isPost){
             $image->uploadFile($image, 'file');
 
+            //TODO удалять старый файл при обновлении
             if ($image->isFileUploaded() && $image->validate() && $image->saveFile('food_type')) {
                 $model->image_id = $image->id;
             }
