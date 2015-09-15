@@ -19,13 +19,18 @@ $this->title = 'Batter World';
                 <h3>Выбор заведения</h3>
 
                 <?php
-                $items = array();
+                $items = array(
+                    array(
+                        'label' => 'Все заведения',
+                        'url' => ['index'],
+                    )
+                );
                 foreach($menu as $_item) {
                     $img =  is_object($_item->image) ?
                         Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
                     $items[] = [
                         'label' => $img . $_item->name,
-                        'url' => ['index', 'id' => $_item->id],
+                        'url' => ['index', 'food' => $_item->id],
 //                        'active' => true, //TODO активный пункт меню
                     ];
                 }
@@ -38,24 +43,28 @@ $this->title = 'Batter World';
 
             </div>
             <div class="col-lg-9">
-                <?php foreach($restaurants as $_restaurant): ?>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
-                                <div class="col-lg-4 text-center"><?= $_restaurant->rating ?></div>
+                <?php if($restaurants): ?>
+                    <?php foreach($restaurants as $_restaurant): ?>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
+                                    <div class="col-lg-4 text-center"><?= $_restaurant->rating ?></div>
+                                </div>
+                                <?php
+                                $img =  is_object($_restaurant->image) ?
+                                    Html::img(DIRECTORY_SEPARATOR . $_restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
+                                ?>
+                                <div class="row"><?= $img ?></div>
+                                <div class="row">Акций не придумано</div>
+                                <div class="row"><?= $_restaurant->work_time ?></div>
+                                <div class="row"><?= \app\models\Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
                             </div>
-                            <?php
-                            $img =  is_object($_restaurant->image) ?
-                                Html::img(DIRECTORY_SEPARATOR . $_restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
-                            ?>
-                            <div class="row"><?= $img ?></div>
-                            <div class="row">Акций не придумано</div>
-                            <div class="row"><?= $_restaurant->work_time ?></div>
-                            <div class="row"><?= \app\models\Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div>Заведений в данной категории не найдено</div>
+                <?php endif; ?>
             </div>
         </div>
 

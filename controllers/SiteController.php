@@ -50,12 +50,21 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($food = null)
     {
 
         //Получаем список типов заведений
         $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->all();
-        $restaurants = Restaurant::find()->where(['status' => 1])->with('image')->all();
+
+        //Если указан тип еды в заведении
+        if(is_numeric($food)) {
+            $foodType = FoodType::find()->where(['id' => $food])->one();
+            $restaurants = $foodType->restaurants;
+        } else {
+            //Получаем список всех заведений
+            $restaurants = Restaurant::find()->where(['status' => 1])->with('image')->all();
+        }
+
         return $this->render('index', [
             'menu' => $foodTypes,
             'restaurants' => $restaurants,

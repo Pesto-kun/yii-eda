@@ -78,7 +78,15 @@ class Restaurant extends \yii\db\ActiveRecord
      */
     public function getDishes()
     {
-        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->where(['status' => 1]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDishesByType($foodTypeId)
+    {
+        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->where(['status' => 1, 'food_type_id' => $foodTypeId]);
     }
 
     /**
