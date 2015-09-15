@@ -5,6 +5,7 @@
 /* @var $restaurants \app\models\Restaurant[] */
 
 //use yii\bootstrap\Nav;
+use kartik\rating\StarRating;
 use yii\widgets\Menu;
 use yii\helpers\Html;
 use app\models\Delivery;
@@ -51,14 +52,17 @@ $this->title = 'Batter World';
                                 <div class="row">
                                     <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
                                     <div class="col-lg-4 text-center">
-                                        <div class="glyphicon-stars">
-                                            <?php for($i = 1; $i <= $_restaurant->rating; $i++): ?>
-                                                <div class="glyphicon-star"></div>
-                                            <?php endfor; ?>
-                                            <?php for($i = $_restaurant->rating; $i <= 5; $i++): ?>
-                                                <div class="glyphicon-star-empty"></div>
-                                            <?php endfor; ?>
-                                        </div>
+                                        <?= StarRating::widget([
+                                            'name' => 'rating',
+                                            'value' => $_restaurant->rating,
+                                            'pluginOptions' => [
+                                                'readonly' => true,
+                                                'showClear' => false,
+                                                'showCaption' => false,
+                                                'size' => 'xs'
+                                            ],
+                                        ]);
+                                        ?>
                                     </div>
                                 </div>
                                 <?php

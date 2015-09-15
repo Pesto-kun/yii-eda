@@ -4,7 +4,7 @@
 /* @var $menu array */
 /* @var $restaurant \app\models\Restaurant */
 /* @var $dishes \app\models\Dish[] */
-
+use kartik\rating\StarRating;
 use yii\widgets\Menu;
 use yii\helpers\Html;
 use app\models\Delivery;
@@ -21,16 +21,19 @@ $this->title = $restaurant->name;
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-8"><?= $restaurant->name ?></div>
-                                <div class="col-lg-4 text-center">
-                                    <div class="glyphicon-stars">
-                                        <?php for($i = 1; $i <= $restaurant->rating; $i++): ?>
-                                            <div class="glyphicon-star"></div>
-                                        <?php endfor; ?>
-                                        <?php for($i = $restaurant->rating; $i <= 5; $i++): ?>
-                                            <div class="glyphicon-star-empty"></div>
-                                        <?php endfor; ?>
-                                    </div>
+                                <div class="col-lg-6"><?= $restaurant->name ?></div>
+                                <div class="col-lg-6 text-center">
+                                    <?= StarRating::widget([
+                                        'name' => 'rating',
+                                        'value' => $restaurant->rating,
+                                        'pluginOptions' => [
+                                            'readonly' => true,
+                                            'showClear' => false,
+                                            'showCaption' => false,
+                                            'size' => 'xs'
+                                        ],
+                                    ]);
+                                    ?>
                                 </div>
                             </div>
                             <?php
