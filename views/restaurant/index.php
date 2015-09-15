@@ -4,10 +4,17 @@
 /* @var $menu array */
 /* @var $restaurant \app\models\Restaurant */
 /* @var $dishes \app\models\Dish[] */
+/* @var $cart array */
 use kartik\rating\StarRating;
 use yii\widgets\Menu;
 use yii\helpers\Html;
 use app\models\Delivery;
+use nirvana\showloading\ShowLoadingAsset;
+
+//Подключение стилей и скритов для прелоадера
+ShowLoadingAsset::register($this);
+
+$this->registerJsFile('/js/cart.js', ['depends' => 'yii\web\JqueryAsset']);
 
 $this->title = $restaurant->name;
 ?>
@@ -72,7 +79,7 @@ $this->title = $restaurant->name;
             <div class="col-lg-9">
                 <?php if($dishes): ?>
                     <?php foreach($dishes as $_dish): ?>
-                        <div class="panel panel-default">
+                        <div class="panel panel-default" id="dish-<?= $_dish->id ?>">
                             <div class="panel-body">
                                 <div class="row"><?= $_dish->name ?></div>
                                 <?php
@@ -83,7 +90,11 @@ $this->title = $restaurant->name;
                                 <div class="row">
                                     <div class="col-lg-3">Вес: <?= $_dish->weight ?> г.</div>
                                     <div class="col-lg-6"><?= $_dish->price ?> руб.</div>
-                                    <div class="col-lg-3">Add</div>
+                                    <div class="col-lg-3">
+                                        <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
+                                        <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
+                                        <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

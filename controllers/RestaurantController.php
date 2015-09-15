@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Cart;
 use app\models\FoodType;
 use app\models\Restaurant;
 use Yii;
@@ -16,7 +17,7 @@ class RestaurantController extends Controller
 
         //Получаем список всех заведений
         /** @var Restaurant $restaurant */
-        $restaurant = Restaurant::find()->where(['status' => 1])->one();
+        $restaurant = Restaurant::findOne(['id' => $id, 'status' => 1]);
 
         //Если указан тип еды в заведении
         if(is_numeric($food)) {
@@ -25,10 +26,14 @@ class RestaurantController extends Controller
             $dishes = $restaurant->dishes;
         }
 
+        //Корзина
+        $cart = new Cart();
+
         return $this->render('index', [
             'menu' => $foodTypes,
             'restaurant' => $restaurant,
             'dishes' => $dishes,
+            'cart' => $cart->getCart(),
         ]);
     }
 
