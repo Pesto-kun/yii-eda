@@ -32,7 +32,7 @@ AppAsset::register($this);
         </div>
         <div class="well row">
             <div class="col-lg-4">Заказ еды в Симферополе</div>
-            <div class="col-lg-4">Логотип</div>
+            <div class="col-lg-4"><?= Html::a('Логотип', ['site/index']) ?></div>
             <div class="col-lg-4">+7(978)999-99-99</div>
         </div>
         <?= $content ?>
