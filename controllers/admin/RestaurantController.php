@@ -116,6 +116,15 @@ class RestaurantController extends AdminController
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            $model->unlinkAll('restaurantTypes');
+
+            foreach($_POST['Restaurant']['foodTypes'] as $_foodType) {
+                $restaurantType = new RestaurantType();
+                $restaurantType->food_type_id = $_foodType;
+                $model->link('restaurantTypes', $restaurantType);
+            }
+
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [
