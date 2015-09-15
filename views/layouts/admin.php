@@ -41,6 +41,7 @@ AppAsset::register($this);
             ['label' => 'Тип еды', 'url' => ['/admin/foodtype/index']],
             ['label' => 'Заведения', 'url' => ['/admin/restaurant/index']],
             ['label' => 'Блюда', 'url' => ['/admin/dish/index']],
+            ['label' => 'Заказы', 'url' => ['/admin/order/index']],
             [
                 'label' => 'Выход (' . Yii::$app->user->identity->username . ')',
                 'url' => ['/site/logout'],

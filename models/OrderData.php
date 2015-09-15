@@ -41,10 +41,9 @@ class OrderData extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
             'order_id' => 'Order ID',
             'dish_id' => 'Dish ID',
-            'amount' => 'Amount',
+            'amount' => 'Количество',
         ];
     }
 

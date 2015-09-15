@@ -13,10 +13,15 @@ use Yii;
  * @property integer $restaurant_id
  *
  * @property Restaurant $restaurant
+ * @property Dish[] $dishes
  * @property OrderData[] $orderDatas
  */
 class Order extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 'new';
+    const STATUS_CANCEL = 'cancel';
+    const STATUS_PROCESSED = 'process';
+
     /**
      * @inheritdoc
      */
@@ -31,7 +36,7 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status'], 'required'],
+            [['status', 'restaurant_id'], 'required'],
             [['created'], 'safe'],
             [['restaurant_id'], 'integer'],
             [['status'], 'string', 'max' => 32]
@@ -44,10 +49,10 @@ class Order extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'status' => 'Status',
-            'created' => 'Created',
-            'restaurant_id' => 'Restaurant ID',
+            'id' => 'Заказ №',
+            'status' => 'Статус',
+            'created' => 'Дата создания',
+            'restaurant_id' => 'Заведение',
         ];
     }
 
@@ -65,5 +70,23 @@ class Order extends \yii\db\ActiveRecord
     public function getOrderDatas()
     {
         return $this->hasMany(OrderData::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDishes() {
+        return $this->hasMany(Dish::className(), ['id' => 'dish_id'])->viaTable('order_data', ['order_id' => 'id']);
+    }
+
+    /**
+     * @return array
+     */
+    static public function getStatusOptions() {
+        return array(
+            self::STATUS_NEW => 'Новый',
+            self::STATUS_CANCEL => 'Отменен',
+            self::STATUS_PROCESSED => 'Обрабатывается',
+        );
     }
 }
