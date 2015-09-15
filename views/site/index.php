@@ -7,6 +7,7 @@
 //use yii\bootstrap\Nav;
 use yii\widgets\Menu;
 use yii\helpers\Html;
+use app\models\Delivery;
 
 $this->title = 'Batter World';
 ?>
@@ -49,7 +50,16 @@ $this->title = 'Batter World';
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
-                                    <div class="col-lg-4 text-center"><?= $_restaurant->rating ?></div>
+                                    <div class="col-lg-4 text-center">
+                                        <div class="glyphicon-stars">
+                                            <?php for($i = 1; $i <= $_restaurant->rating; $i++): ?>
+                                                <div class="glyphicon-star"></div>
+                                            <?php endfor; ?>
+                                            <?php for($i = $_restaurant->rating; $i <= 5; $i++): ?>
+                                                <div class="glyphicon-star-empty"></div>
+                                            <?php endfor; ?>
+                                        </div>
+                                    </div>
                                 </div>
                                 <?php
                                 $img =  is_object($_restaurant->image) ?
@@ -58,7 +68,7 @@ $this->title = 'Batter World';
                                 <div class="row"><?= $img ?></div>
                                 <div class="row">Акций не придумано</div>
                                 <div class="row"><?= $_restaurant->work_time ?></div>
-                                <div class="row"><?= \app\models\Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
+                                <div class="row"><?= Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
                             </div>
                         </div>
                     <?php endforeach; ?>
