@@ -31,9 +31,9 @@ AppAsset::register($this);
             <p class="pull-right">Тут будет строка поиска</p>
         </div>
         <div class="well row">
-            <div class="col-lg-4">Заказ еды в Симферополе</div>
-            <div class="col-lg-4"><?= Html::a('Логотип', ['site/index']) ?></div>
-            <div class="col-lg-4">+7(978)999-99-99</div>
+            <div class="col-sm-4">Заказ еды в Симферополе</div>
+            <div class="col-sm-4"><?= Html::a('Логотип', ['site/index']) ?></div>
+            <div class="col-sm-4">+7(978)999-99-99 <?= Html::a('Корзина', ['cart/index']) ?></div>
         </div>
         <?= $content ?>
     </div>

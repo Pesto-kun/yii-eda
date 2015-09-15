@@ -14,6 +14,7 @@ use nirvana\showloading\ShowLoadingAsset;
 //Подключение стилей и скритов для прелоадера
 ShowLoadingAsset::register($this);
 
+//Скрипт для добавления\редактирвоания корзины
 $this->registerJsFile('/js/cart.js', ['depends' => 'yii\web\JqueryAsset']);
 
 $this->title = $restaurant->name;
@@ -23,13 +24,13 @@ $this->title = $restaurant->name;
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-3 sidebar">
+            <div class="col-md-3 sidebar">
                 <div class="row">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-6"><?= $restaurant->name ?></div>
-                                <div class="col-lg-6 text-center">
+                                <div class="col-md-6"><?= $restaurant->name ?></div>
+                                <div class="col-md-6 text-center">
                                     <?= StarRating::widget([
                                         'name' => 'rating',
                                         'value' => $restaurant->rating,
@@ -76,7 +77,7 @@ $this->title = $restaurant->name;
                     ?>
                 </div>
             </div>
-            <div class="col-lg-9">
+            <div class="col-md-9">
                 <?php if($dishes): ?>
                     <?php foreach($dishes as $_dish): ?>
                         <div class="panel panel-default" id="dish-<?= $_dish->id ?>">
@@ -88,12 +89,12 @@ $this->title = $restaurant->name;
                                 ?>
                                 <div class="row"><?= $img ?></div>
                                 <div class="row">
-                                    <div class="col-lg-3">Вес: <?= $_dish->weight ?> г.</div>
-                                    <div class="col-lg-6"><?= $_dish->price ?> руб.</div>
-                                    <div class="col-lg-3">
-                                        <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
-                                        <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
+                                    <div class="col-md-3">Вес: <?= $_dish->weight ?> г.</div>
+                                    <div class="col-md-6"><?= $_dish->price ?> руб.</div>
+                                    <div class="col-md-3">
                                         <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
+                                        <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
+                                        <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
                                     </div>
                                 </div>
                             </div>

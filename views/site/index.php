@@ -17,7 +17,7 @@ $this->title = 'Batter World';
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-3 sidebar">
+            <div class="col-md-3 sidebar">
                 <h3>Выбор заведения</h3>
 
                 <?php
@@ -44,14 +44,14 @@ $this->title = 'Batter World';
                 ?>
 
             </div>
-            <div class="col-lg-9">
+            <div class="col-md-9">
                 <?php if($restaurants): ?>
                     <?php foreach($restaurants as $_restaurant): ?>
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-lg-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
-                                    <div class="col-lg-4 text-center">
+                                    <div class="col-md-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
+                                    <div class="col-md-4 text-center">
                                         <?= StarRating::widget([
                                             'name' => 'rating',
                                             'value' => $_restaurant->rating,
