@@ -10,8 +10,8 @@ use kartik\file\FileInput;
 /* @var $image app\models\Image */
 /* @var $form yii\widgets\ActiveForm */
 
-$cities = ArrayHelper::map(app\models\City::find()->asArray()->all(), 'id', 'name');;
-$foodTypes = ArrayHelper::map(app\models\FoodType::find()->asArray()->all(), 'id', 'name');;
+$cities = ArrayHelper::map(app\models\City::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');;
+$foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');;
 ?>
 
 <div class="restaurant-form">

@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Dishes';
+$this->title = 'Блюда';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="dish-index">
@@ -14,31 +14,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Dish', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить блюдо', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'status',
-//            'restaurant_id',
+            [
+                'attribute' => 'status',
+                'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
+                'label' => 'Статус'
+            ],
             [
                 'attribute' => 'restaurant.name',
-                'label' => Yii::t('app', 'Restaurant')
+                'label' => 'Заведение'
             ],
             [
                 'attribute' => 'foodType.name',
-                'label' => Yii::t('app', 'Food type')
+                'label' => 'Вид еды'
             ],
             'name',
-            'image_id',
-             'weight',
-             'price',
+            'weight',
+            'price',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => ['width' => '80'],
+                'template' => '{update} {delete}',
+            ],
         ],
     ]); ?>
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers\admin;
 
+use app\models\Image;
 use Yii;
 use app\models\Dish;
 use yii\data\ActiveDataProvider;
@@ -41,17 +42,17 @@ class DishController extends AdminController
         ]);
     }
 
-    /**
-     * Displays a single Dish model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+//    /**
+//     * Displays a single Dish model.
+//     * @param integer $id
+//     * @return mixed
+//     */
+//    public function actionView($id)
+//    {
+//        return $this->render('view', [
+//            'model' => $this->findModel($id),
+//        ]);
+//    }
 
     /**
      * Creates a new Dish model.
@@ -61,12 +62,22 @@ class DishController extends AdminController
     public function actionCreate()
     {
         $model = new Dish();
+        $image = new Image();
+
+        if(Yii::$app->request->isPost){
+            $image->uploadFile($image, 'file');
+
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('dish')) {
+                $model->image_id = $image->id;
+            }
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'image' => $image,
             ]);
         }
     }
@@ -80,12 +91,27 @@ class DishController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->image) {
+            $image = $model->image;
+        } else {
+            $image = new Image();
+        }
+
+        if(Yii::$app->request->isPost){
+            $image->uploadFile($image, 'file');
+
+            //TODO удалять старый файл при обновлении
+            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('dish')) {
+                $model->image_id = $image->id;
+            }
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'image' => $image,
             ]);
         }
     }

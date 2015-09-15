@@ -4,11 +4,11 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Dish */
+/* @var $image app\models\Image */
 
-$this->title = 'Update Dish: ' . ' ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Dishes', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Редактирование блюда: ' . ' ' . $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Блюда', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $model->name;
 ?>
 <div class="dish-update">
 
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'image' => $image,
     ]) ?>
 
 </div>

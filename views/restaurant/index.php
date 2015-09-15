@@ -42,6 +42,16 @@ $this->title = $restaurant->name;
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row"><?= $_dish->name ?></div>
+                            <?php
+                            $img =  is_object($_dish->image) ?
+                                Html::img(DIRECTORY_SEPARATOR . $_dish->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
+                            ?>
+                            <div class="row"><?= $img ?></div>
+                            <div class="row">
+                                <div class="col-lg-3">Вес: <?= $_dish->weight ?> г.</div>
+                                <div class="col-lg-6"><?= $_dish->price ?> руб.</div>
+                                <div class="col-lg-3">Add</div>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

@@ -16,9 +16,9 @@ use Yii;
  * @property integer $weight
  * @property string $price
  *
+ * @property Image $image
  * @property Restaurant $restaurant
  * @property FoodType $foodType
- * @property OrderData[] $orderDatas
  */
 class Dish extends \yii\db\ActiveRecord
 {
@@ -49,15 +49,21 @@ class Dish extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'status' => 'Enable',
-            'restaurant_id' => 'Restaurant',
-            'food_type_id' => 'Food type',
-            'name' => 'Name',
-            'image_id' => 'Image ID',
-            'weight' => 'Weight',
-            'price' => 'Price',
+            'status' => 'Включено',
+            'restaurant_id' => 'Заведение',
+            'food_type_id' => 'Вид еды',
+            'name' => 'Название',
+            'weight' => 'Вес',
+            'price' => 'Цена',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getImage()
+    {
+        return $this->hasOne(Image::className(), ['id' => 'image_id']);
     }
 
     /**
@@ -75,11 +81,11 @@ class Dish extends \yii\db\ActiveRecord
         return $this->hasOne(FoodType::className(), ['id' => 'food_type_id']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrderDatas()
-    {
-        return $this->hasMany(OrderData::className(), ['dish_id' => 'id']);
-    }
+//    /**
+//     * @return \yii\db\ActiveQuery
+//     */
+//    public function getOrderDatas()
+//    {
+//        return $this->hasMany(OrderData::className(), ['dish_id' => 'id']);
+//    }
 }
