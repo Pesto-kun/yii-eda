@@ -10,10 +10,21 @@ use Yii;
  * @property integer $id
  * @property string $status
  * @property string $created
+ * @property string $updated
  * @property integer $restaurant_id
+ * @property string $delivery_method
+ * @property string $delivery_time
+ * @property string $delivery_cost
+ * @property string $payment_method
+ * @property string $total_cost
+ * @property string $phone
+ * @property string $username
+ * @property string $street
+ * @property string $house
+ * @property string $apartment
+ * @property string $comment
  *
  * @property Restaurant $restaurant
- * @property Dish[] $dishes
  * @property OrderData[] $orderDatas
  */
 class Order extends \yii\db\ActiveRecord
@@ -36,10 +47,12 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'restaurant_id'], 'required'],
-            [['created'], 'safe'],
+            [['status', 'delivery_method', 'payment_method', 'phone', 'username', 'street', 'house'], 'required'],
+            [['created', 'updated'], 'safe'],
             [['restaurant_id'], 'integer'],
-            [['status'], 'string', 'max' => 32]
+            [['comment'], 'string'],
+            [['status', 'delivery_method', 'delivery_cost', 'payment_method'], 'string', 'max' => 32],
+            [['phone', 'username', 'street', 'house', 'apartment'], 'string', 'max' => 255]
         ];
     }
 
@@ -52,7 +65,19 @@ class Order extends \yii\db\ActiveRecord
             'id' => 'Заказ №',
             'status' => 'Статус',
             'created' => 'Дата создания',
-            'restaurant_id' => 'Заведение',
+            'updated' => 'Обновлено',
+            'restaurant_id' => 'ID заведения',
+            'delivery_method' => 'Способ доставки',
+            'delivery_time' => 'Время доставки',
+            'delivery_cost' => 'Стоимость доставки',
+            'payment_method' => 'Метод оплаты',
+            'total_cost' => 'Итого к оплате',
+            'phone' => 'Телефон',
+            'username' => 'Имя',
+            'street' => 'Улица',
+            'house' => 'Дом',
+            'apartment' => 'Квартира',
+            'comment' => 'Комменатрий',
         ];
     }
 
@@ -89,4 +114,5 @@ class Order extends \yii\db\ActiveRecord
             self::STATUS_PROCESSED => 'Обрабатывается',
         );
     }
+
 }

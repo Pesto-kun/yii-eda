@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Cart;
 use app\models\Dish;
+use app\models\Order;
+use Yii;
 
 class CartController extends \yii\web\Controller
 {
@@ -29,4 +31,34 @@ class CartController extends \yii\web\Controller
         $this->redirect(['index']);
     }
 
+    /**
+     * Страница оформления заказа
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionCheckout() {
+
+        //Заказ
+        $order = new Order();
+
+        //Корзина
+        $cart = new Cart();
+
+        if ($order->load(Yii::$app->request->post())) {
+            if ($order->validate()) {
+                //TODO тут будет всякий код
+            }
+        }
+
+        //Если корзина пуста
+        if(!$cart->getCart()) {
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('checkout', [
+            'order' => $order,
+            'dishes' => Dish::findAll(array_keys($cart->getCart())),
+            'cart' => $cart,
+        ]);
+    }
 }
