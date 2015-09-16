@@ -30,19 +30,12 @@ $this->title = $restaurant->name;
                 <div class="row">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-6"><?= $restaurant->name ?></div>
-                                <div class="col-md-6 text-center">
-                                    <?= StarRating::widget([
-                                        'name' => 'rating',
-                                        'value' => $restaurant->rating,
-                                        'pluginOptions' => [
-                                            'readonly' => true,
-                                            'showClear' => false,
-                                            'showCaption' => false,
-                                            'size' => 'xs'
-                                        ],
-                                    ]);
+                            <div>
+                                <?= $restaurant->name ?>
+                                <div class="pull-right">
+                                    <?php
+                                    for($i = 0; $i < $restaurant->rating; $i++) echo '<span class="glyphicon glyphicon-star"></span>';
+                                    for($i = $restaurant->rating; $i < 5; $i++) echo '<span class="glyphicon glyphicon-star-empty"></span>';
                                     ?>
                                 </div>
                             </div>
@@ -50,10 +43,10 @@ $this->title = $restaurant->name;
                             $img =  is_object($restaurant->image) ?
                                 Html::img(DIRECTORY_SEPARATOR . $restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                             ?>
-                            <div class="row"><?= $img ?></div>
-                            <div class="row">Акций не придумано</div>
-                            <div class="row"><?= $restaurant->work_time ?></div>
-                            <div class="row"><?= Delivery::getDeliveryTypeName($restaurant->delivery_type) ?> - <?= $restaurant->delivery_price ?> руб.</div>
+                            <div class="text-center"><?= $img ?></div>
+                            <div>Акций не придумано</div>
+                            <div><?= $restaurant->work_time ?></div>
+                            <div><?= Delivery::getDeliveryTypeName($restaurant->delivery_type) ?> - <?= $restaurant->delivery_price ?> руб.</div>
                         </div>
                     </div>
                 </div>
@@ -95,15 +88,19 @@ $this->title = $restaurant->name;
                                 $img =  is_object($_dish->image) ?
                                     Html::img(DIRECTORY_SEPARATOR . $_dish->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
-                                <div><?= $img ?></div>
+                                <div class="text-center"><?= $img ?></div>
                                 <div>
-                                    <div class="col-sm-5">Вес: <?= $_dish->weight ?> г.</div>
-                                    <div class="col-sm-4"><?= $_dish->price ?> руб.</div>
-                                    <div class="col-sm-3">
-                                        <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
-                                        <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
-                                        <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
-                                    </div>
+                                    <table class="table">
+                                        <tr>
+                                            <td>Вес:<br/><?= $_dish->weight ?> г.</td>
+                                            <td><?= $_dish->price ?> руб.</td>
+                                            <td>
+                                                <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
+                                                <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
+                                                <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
