@@ -23,4 +23,10 @@ class CartController extends \yii\web\Controller
         }
     }
 
+    public function actionClear() {
+        $cart = new Cart();
+        $cart->clearCart();
+        $this->redirect(['index']);
+    }
+
 }

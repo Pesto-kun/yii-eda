@@ -22,6 +22,7 @@ $total = 0;
 
     <div class="body-content">
         <td class="row">
+            <p class="pull-right"><?= Html::a('Очистить корзину', ['cart/clear']) ?></p>
             <table class="table">
                 <?php foreach($dishes as $_dish): ?>
                     <tr id="dish-<?= $_dish->id ?>">

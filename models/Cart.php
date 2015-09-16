@@ -118,6 +118,16 @@ class Cart extends Model {
     }
 
     /**
+     * Очистка корзины
+     */
+    public function clearCart() {
+        $cookies = Yii::$app->response->cookies;
+        $cookies->remove(self::COOKIE_CART);
+        $cookies->remove(self::COOKIE_RESTAURANT);
+        unset($cookies[self::COOKIE_CART], $cookies[self::COOKIE_RESTAURANT]);
+    }
+
+    /**
      * Проверка, что ресторан тот же
      *
      * @param $id
