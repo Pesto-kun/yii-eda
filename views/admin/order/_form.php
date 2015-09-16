@@ -19,6 +19,13 @@ $restaurants = ArrayHelper::map(app\models\Restaurant::find()->where(['status' =
 
     <?= $form->field($model, 'restaurant_id')->dropDownList($restaurants, ['prompt' => '- Не выбрано -'])?>
 
+    <?= $form->field($model, 'phone') ?>
+    <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'street') ?>
+    <?= $form->field($model, 'house') ?>
+    <?= $form->field($model, 'apartment') ?>
+    <?= $form->field($model, 'comment')->textarea(['rows' => 5]) ?>
+
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

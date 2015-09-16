@@ -37,6 +37,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'restaurant.name',
                 'label' => 'Заведение'
             ],
+            'delivery_method',
+            'delivery_time',
+            'delivery_cost',
+            'payment_method',
+            'total_cost',
+            'phone',
+            'username',
+            'street',
+            'house',
+            'apartment',
+            'comment',
         ],
     ]) ?>
 

@@ -100,7 +100,7 @@ CREATE TABLE `order` (
   `restaurant_id` int(11) UNSIGNED,
   `delivery_method` varchar(32) NOT NULL,
   `delivery_time` TIMESTAMP,
-  `delivery_cost` varchar(32) NOT NULL,
+  `delivery_cost` varchar(32),
   `payment_method` varchar(32) NOT NULL,
   `total_cost` decimal(10,2) NOT NULL,
 #   `city` varchar(255),

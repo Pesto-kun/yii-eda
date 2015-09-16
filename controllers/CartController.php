@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\Cart;
 use app\models\Dish;
 use app\models\Order;
+use app\models\OrderData;
+use Exception;
 use Yii;
 
 class CartController extends \yii\web\Controller
@@ -45,9 +47,37 @@ class CartController extends \yii\web\Controller
         $cart = new Cart();
 
         if ($order->load(Yii::$app->request->post())) {
-            if ($order->validate()) {
-                //TODO тут будет всякий код
+
+            try {
+                //Передаем в заказ корзину
+                $order->setCart($cart);
+
+                //Добавление необходимых параметров заказа
+                $order->processCart();
+
+                //Проверяем даныне
+                if ($order->validate()) {
+
+                    //Сохраняем заказ
+                    $order->save();
+
+                    //Добавление блюд к заказу
+                    /** @var Dish $_dish */
+                    foreach($order->getTmpDishes() as $_dish) {
+                        $orderData = new OrderData();
+                        $orderData->dish_id = $_dish->id;
+                        $orderData->amount = $order->getCartModel()->getAmountOfSingleDish($_dish->id);
+                        $order->link('orderDatas', $orderData);
+                    }
+
+                    //Очищаем корзину
+                    $cart->clearCart();
+                }
+
+            } catch(Exception $e) {
+                //TODO
             }
+
         }
 
         //Если корзина пуста

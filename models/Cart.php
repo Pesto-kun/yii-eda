@@ -52,6 +52,14 @@ class Cart extends Model {
     }
 
     /**
+     * @return int
+     */
+    public function getRestaurant() {
+        return $this->_restaurant;
+    }
+
+
+    /**
      * Добавление блюда в корзину
      *
      * @param $id

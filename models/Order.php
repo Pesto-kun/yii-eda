@@ -2,7 +2,10 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "order".
@@ -26,12 +29,20 @@ use Yii;
  *
  * @property Restaurant $restaurant
  * @property OrderData[] $orderDatas
+ * @property Dish[] $dishes
  */
 class Order extends \yii\db\ActiveRecord
 {
     const STATUS_NEW = 'new';
     const STATUS_CANCEL = 'cancel';
     const STATUS_PROCESSED = 'process';
+
+    /** @var \app\models\Cart */
+    protected $_cart = null;
+
+    //Временно сохранение загруженных блюд из корзины
+    /** @var \app\models\Dish[] */
+    protected $_dishes = array();
 
     /**
      * @inheritdoc
@@ -41,13 +52,18 @@ class Order extends \yii\db\ActiveRecord
         return 'order';
     }
 
+    public function init() {
+        parent::init();
+        $this->status = self::STATUS_NEW;
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['status', 'delivery_method', 'payment_method', 'phone', 'username', 'street', 'house'], 'required'],
+            [['delivery_method', 'payment_method', 'phone', 'username', 'street', 'house'], 'required'],
             [['created', 'updated'], 'safe'],
             [['restaurant_id'], 'integer'],
             [['comment'], 'string'],
@@ -78,6 +94,17 @@ class Order extends \yii\db\ActiveRecord
             'house' => 'Дом',
             'apartment' => 'Квартира',
             'comment' => 'Комменатрий',
+        ];
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => ['created', 'updated'],
+                'updatedAtAttribute' => 'updated',
+                'value' => new Expression('NOW()'),
+            ]
         ];
     }
 
@@ -113,6 +140,73 @@ class Order extends \yii\db\ActiveRecord
             self::STATUS_CANCEL => 'Отменен',
             self::STATUS_PROCESSED => 'Обрабатывается',
         );
+    }
+
+    /**
+     * @param $cart \app\models\Cart
+     *
+     * @return $this
+     */
+    public function setCart($cart) {
+        $this->_cart = $cart;
+        return $this;
+    }
+
+    /**
+     * @return \app\models\Cart
+     */
+    public function getCartModel() {
+        return $this->_cart;
+    }
+
+    public function getTmpDishes() {
+        return $this->_dishes;
+    }
+    public function setTmpDishes($dishes) {
+        $this->_dishes = $dishes;
+        return $this;
+    }
+
+    public function processCart() {
+
+        $total = 0;
+
+        //Загружаем блюда из заказа
+        /** @var Dish[] $dishes */
+        $dishes = Dish::find()->where(['in', 'id', array_keys($this->getCartModel()->getCart())])->andWhere(['status' => 1])->indexBy('id')->all();
+        $this->setTmpDishes($dishes);
+
+        //Проверяем корзину
+        foreach($this->getCartModel()->getCart() as $id => $amount) {
+
+            //Проверяем доступность блюда
+            if(!isset($dishes[$id])) {
+                throw new Exception('Блюдо из корзины не найдено');
+            }
+
+            //Проверяем поле количества
+            if(!is_numeric($amount)) {
+                throw new Exception('Для блюда id:'.$id.' передан неверный параметр количества');
+            }
+
+            //Проверяем ресторан
+            if(!$this->getCartModel()->checkSameRestaurant($dishes[$id]->restaurant_id)) {
+                throw new Exception('Невозможно оформить заказ с блюдами из разных заведений.');
+            }
+
+            $total += $amount * $dishes[$id]->price;
+        }
+
+        //ID ресторана
+        $this->restaurant_id = $this->getCartModel()->getRestaurant();
+
+        //TODO Стоимость доставки
+
+        //TODO Стоимость оплаты
+
+        //Стоимость заказа
+        $this->total_cost = $total;
+
     }
 
 }

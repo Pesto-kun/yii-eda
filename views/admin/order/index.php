@@ -23,7 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'status',
             'created',
-            'restaurant_id',
+            [
+                'attribute' => 'restaurant.name',
+                'label' => 'Заведение'
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
