@@ -18,6 +18,8 @@ use kartik\file\FileInput;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+
     <?php
         $pluginOptions = [
             'showPreview' => true,

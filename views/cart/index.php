@@ -22,7 +22,8 @@ $total = 0;
 
     <div class="body-content">
         <td class="row">
-            <p class="pull-right"><?= Html::a('Очистить корзину', ['cart/clear']) ?></p>
+            <p class="pull-right"><?= Html::a('Очистить корзину', ['cart/clear'],
+                    ['class' => 'btn btn-link']) ?></p>
             <table class="table">
                 <?php foreach($dishes as $_dish): ?>
                     <tr id="dish-<?= $_dish->id ?>">
@@ -41,7 +42,8 @@ $total = 0;
         </div>
         <div class="row">
             <div class="col-md-6">Итого: <?= $total ?> руб.</div>
-            <div class="col-md-6"><span class="pull-right"><?= Html::a('Оформить заказ', ['cart/checkout']) ?></span></div>
+            <div class="col-md-6"><span class="pull-right"><?= Html::a('Оформить заказ', ['cart/checkout'],
+                        ['class' => 'btn btn-warning']) ?></span></div>
         </div>
     </div>
 </div>

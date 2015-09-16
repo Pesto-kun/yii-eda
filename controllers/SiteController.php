@@ -57,8 +57,8 @@ class SiteController extends Controller
         $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->all();
 
         //Если указан тип еды в заведении
-        if(is_numeric($food)) {
-            $foodType = FoodType::find()->where(['id' => $food])->one();
+        if($food) {
+            $foodType = FoodType::find()->where(['system_name' => $food])->one();
             $restaurants = $foodType->restaurants;
         } else {
             //Получаем список всех заведений

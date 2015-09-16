@@ -11,6 +11,7 @@ use Yii;
  * @property integer $status
  * @property integer $city_id
  * @property string $name
+ * @property string $system_name
  * @property integer $image_id
  * @property integer $rating
  * @property string $work_time
@@ -42,8 +43,8 @@ class Restaurant extends \yii\db\ActiveRecord
         return [
             [['status', 'city_id', 'image_id', 'rating'], 'integer'],
             [['delivery_price'], 'number', 'numberPattern' => '/^\d+([\.\,]\d{1,2})?$/'],
-            [['name'], 'required'],
-            [['name', 'work_time', 'delivery_type'], 'string', 'max' => 255]
+            [['name', 'system_name'], 'required'],
+            [['name', 'work_time', 'delivery_type', 'system_name'], 'string', 'max' => 255]
         ];
     }
 
@@ -57,6 +58,7 @@ class Restaurant extends \yii\db\ActiveRecord
             'status' => 'Включено',
             'city_id' => 'Город',
             'name' => 'Название',
+            'system_name' => 'Системное название',
             'image_id' => 'Изображение',
             'rating' => 'Рейтинг',
             'work_time' => 'Время работы',
@@ -78,7 +80,7 @@ class Restaurant extends \yii\db\ActiveRecord
      */
     public function getDishes()
     {
-        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->where(['status' => 1]);
+        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->with('image')->where(['status' => 1]);
     }
 
     /**
@@ -86,7 +88,7 @@ class Restaurant extends \yii\db\ActiveRecord
      */
     public function getDishesByType($foodTypeId)
     {
-        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->where(['status' => 1, 'food_type_id' => $foodTypeId]);
+        return $this->hasMany(Dish::className(), ['restaurant_id' => 'id'])->with('image')->where(['status' => 1, 'food_type_id' => $foodTypeId]);
     }
 
     /**

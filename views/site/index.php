@@ -10,6 +10,8 @@ use yii\widgets\Menu;
 use yii\helpers\Html;
 use app\models\Delivery;
 
+/** @var \yii\web\Controller $controller */
+$controller = $this->context;
 $this->title = 'Batter World';
 ?>
 <div class="site-index">
@@ -27,17 +29,18 @@ $this->title = 'Batter World';
                         'url' => ['index'],
                     )
                 );
+                /** @var \app\models\FoodType $_item */
                 foreach($menu as $_item) {
                     $img =  is_object($_item->image) ?
                         Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
                     $items[] = [
                         'label' => $img . $_item->name,
-                        'url' => ['index', 'food' => $_item->id],
-//                        'active' => true, //TODO активный пункт меню
+                        'url' => ['index', 'food' => $_item->system_name],
+                        'active' => ($_item->system_name === $controller->actionParams['food'])
                     ];
                 }
                 echo Menu::widget([
-                    'options' => ['class' => 'nav nav-sidebar'],
+                    'options' => ['class' => 'nav nav-pills nav-stacked'],
                     'items' => $items,
                     'encodeLabels' => false,
                 ]);
@@ -49,19 +52,16 @@ $this->title = 'Batter World';
                     <?php foreach($restaurants as $_restaurant): ?>
                         <div class="panel panel-default pull-left">
                             <div class="panel-body">
-                                <div><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
-                                <div class="text-right">
-                                    <?= StarRating::widget([
-                                        'name' => 'rating',
-                                        'value' => $_restaurant->rating,
-                                        'pluginOptions' => [
-                                            'readonly' => true,
-                                            'showClear' => false,
-                                            'showCaption' => false,
-                                            'size' => 'xs'
-                                        ],
-                                    ]);
-                                    ?>
+                                <div>
+                                    <?= Html::a($_restaurant->name, ['restaurant/index', 'name' => $_restaurant->system_name])?>
+                                    <div class="pull-right">
+                                        <div class="rating-container">
+                                            <?php
+                                            for($i = 0; $i < $_restaurant->rating; $i++) echo '<span class="glyphicon glyphicon-star"></span>';
+                                            for($i = $_restaurant->rating; $i < 5; $i++) echo '<span class="glyphicon glyphicon-star-empty"></span>';
+                                            ?>
+                                        </div>
+                                    </div>
                                 </div>
                                 <?php
                                 $img =  is_object($_restaurant->image) ?

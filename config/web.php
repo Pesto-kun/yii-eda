@@ -41,6 +41,12 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'rules' => [
+                'restaurant/<name:[\w\-]+>/<food:[\w\-]+>' => 'restaurant/index',
+                'restaurant/<name:[\w\-]+>' => 'restaurant/index',
+                'food/<food:[\w\-]+>' => 'site/index',
+                '' => 'site/index',
+            ],
         ],
     ],
     'params' => $params,

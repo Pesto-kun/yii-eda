@@ -17,6 +17,8 @@ ShowLoadingAsset::register($this);
 //Скрипт для добавления\редактирвоания корзины
 $this->registerJsFile('/js/cart.js', ['depends' => 'yii\web\JqueryAsset']);
 
+/** @var \yii\web\Controller $controller */
+$controller = $this->context;
 $this->title = $restaurant->name;
 ?>
 <div class="site-index">
@@ -62,20 +64,21 @@ $this->title = $restaurant->name;
                     $items = array(
                         array(
                             'label' => 'Все блюда',
-                            'url' => ['index', 'id' => $restaurant->id],
+                            'url' => ['index', 'name' => $restaurant->system_name],
                         )
                     );
+                    /** @var \app\models\FoodType $_item */
                     foreach($menu as $_item) {
                         $img =  is_object($_item->image) ?
                             Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
                         $items[] = [
                             'label' => $img . $_item->name,
-                            'url' => ['index', 'id' => $restaurant->id, 'food' => $_item->id],
-                            //                        'active' => true, //TODO активный пункт меню
+                            'url' => ['index', 'name' => $restaurant->system_name, 'food' => $_item->system_name],
+                            'active' => ($_item->system_name === $controller->actionParams['food'])
                         ];
                     }
                     echo Menu::widget([
-                        'options' => ['class' => 'nav nav-sidebar'],
+                        'options' => ['class' => 'nav nav-pills nav-stacked'],
                         'items' => $items,
                         'encodeLabels' => false,
                     ]);

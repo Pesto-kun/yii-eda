@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $status
  * @property string $name
+ * @property string $system_name
  * @property integer $image_id
  *
  * @property Image $image
@@ -33,8 +34,8 @@ class FoodType extends \yii\db\ActiveRecord
     {
         return [
             [['status', 'image_id'], 'integer'],
-            [['name'], 'required'],
-            [['name'], 'string', 'max' => 255]
+            [['name', 'system_name'], 'required'],
+            [['name', 'system_name'], 'string', 'max' => 255]
         ];
     }
 
@@ -47,6 +48,7 @@ class FoodType extends \yii\db\ActiveRecord
             'id' => 'ID',
             'status' => 'Включено',
             'name' => 'Название',
+            'system_name' => 'Системное название',
             'image_id' => 'Изображение',
         ];
     }
@@ -63,7 +65,7 @@ class FoodType extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getRestaurants() {
-        return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])
+        return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])->with('image')
             ->where(['status' => 1])->viaTable('restaurant_type', ['food_type_id' => 'id']);
     }
 

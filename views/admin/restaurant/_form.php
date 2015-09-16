@@ -24,6 +24,8 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+
     <?php
     $pluginOptions = [
         'showPreview' => true,

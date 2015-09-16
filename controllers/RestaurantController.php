@@ -10,18 +10,19 @@ use yii\web\Controller;
 
 class RestaurantController extends Controller
 {
-    public function actionIndex($id, $food = null)
+    public function actionIndex($name, $food = null)
     {
         //Получаем список типов еды
-        $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->all();
+        /** @var FoodType[] $foodTypes */
+        $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->indexBy('system_name')->all();
 
         //Получаем список всех заведений
         /** @var Restaurant $restaurant */
-        $restaurant = Restaurant::findOne(['id' => $id, 'status' => 1]);
+        $restaurant = Restaurant::findOne(['system_name' => $name, 'status' => 1]);
 
         //Если указан тип еды в заведении
-        if(is_numeric($food)) {
-            $dishes = $restaurant->getDishesByType($food)->all();
+        if(isset($foodTypes[$food])) {
+            $dishes = $restaurant->getDishesByType($foodTypes[$food]->id)->all();
         } else {
             $dishes = $restaurant->dishes;
         }

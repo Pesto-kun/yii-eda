@@ -23,6 +23,7 @@ CREATE TABLE `food_type` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `status` int(1) NOT NULL DEFAULT '1',
   `name` varchar(255) NOT NULL,
+  `system_name` varchar(255) NOT NULL,
   `image_id` int(11) UNSIGNED,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -38,6 +39,7 @@ CREATE TABLE `restaurant` (
   `status` int(1) NOT NULL DEFAULT '1',
   `city_id` int(11) UNSIGNED,
   `name` varchar(255) NOT NULL,
+  `system_name` varchar(255) NOT NULL,
   `image_id` int(11) UNSIGNED,
   `rating` int(1) UNSIGNED,
   `work_time` varchar(255),
