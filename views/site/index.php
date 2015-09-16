@@ -47,32 +47,31 @@ $this->title = 'Batter World';
             <div class="col-md-9">
                 <?php if($restaurants): ?>
                     <?php foreach($restaurants as $_restaurant): ?>
-                        <div class="panel panel-default">
+                        <div class="panel panel-default pull-left">
                             <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-8"><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
-                                    <div class="col-md-4 text-center">
-                                        <?= StarRating::widget([
-                                            'name' => 'rating',
-                                            'value' => $_restaurant->rating,
-                                            'pluginOptions' => [
-                                                'readonly' => true,
-                                                'showClear' => false,
-                                                'showCaption' => false,
-                                                'size' => 'xs'
-                                            ],
-                                        ]);
-                                        ?>
-                                    </div>
+                                <div><?= Html::a($_restaurant->name, ['restaurant/index', 'id' => $_restaurant->id])?></div>
+                                <div class="text-right">
+                                    <?= StarRating::widget([
+                                        'name' => 'rating',
+                                        'value' => $_restaurant->rating,
+                                        'pluginOptions' => [
+                                            'readonly' => true,
+                                            'showClear' => false,
+                                            'showCaption' => false,
+                                            'size' => 'xs'
+                                        ],
+                                    ]);
+                                    ?>
                                 </div>
                                 <?php
                                 $img =  is_object($_restaurant->image) ?
-                                    Html::img(DIRECTORY_SEPARATOR . $_restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
+                                    Html::img(DIRECTORY_SEPARATOR . $_restaurant->image->filepath,
+                                        ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
-                                <div class="row"><?= $img ?></div>
-                                <div class="row">Акций не придумано</div>
-                                <div class="row"><?= $_restaurant->work_time ?></div>
-                                <div class="row"><?= Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
+                                <div class="text-center"><?= $img ?></div>
+                                <div>Акций не придумано</div>
+                                <div><?= $_restaurant->work_time ?></div>
+                                <div><?= Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
                             </div>
                         </div>
                     <?php endforeach; ?>

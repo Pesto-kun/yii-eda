@@ -59,7 +59,12 @@ $this->title = $restaurant->name;
                     <h3>Выбор заведения</h3>
 
                     <?php
-                    $items = array();
+                    $items = array(
+                        array(
+                            'label' => 'Все блюда',
+                            'url' => ['index', 'id' => $restaurant->id],
+                        )
+                    );
                     foreach($menu as $_item) {
                         $img =  is_object($_item->image) ?
                             Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
@@ -80,18 +85,18 @@ $this->title = $restaurant->name;
             <div class="col-md-9">
                 <?php if($dishes): ?>
                     <?php foreach($dishes as $_dish): ?>
-                        <div class="panel panel-default" id="dish-<?= $_dish->id ?>">
+                        <div class="panel panel-default pull-left" id="dish-<?= $_dish->id ?>">
                             <div class="panel-body">
-                                <div class="row"><?= $_dish->name ?></div>
+                                <div><?= $_dish->name ?></div>
                                 <?php
                                 $img =  is_object($_dish->image) ?
                                     Html::img(DIRECTORY_SEPARATOR . $_dish->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
-                                <div class="row"><?= $img ?></div>
-                                <div class="row">
-                                    <div class="col-md-3">Вес: <?= $_dish->weight ?> г.</div>
-                                    <div class="col-md-6"><?= $_dish->price ?> руб.</div>
-                                    <div class="col-md-3">
+                                <div><?= $img ?></div>
+                                <div>
+                                    <div class="col-sm-5">Вес: <?= $_dish->weight ?> г.</div>
+                                    <div class="col-sm-4"><?= $_dish->price ?> руб.</div>
+                                    <div class="col-sm-3">
                                         <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
                                         <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>
                                         <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
