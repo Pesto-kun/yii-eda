@@ -49,6 +49,7 @@ class CartController extends \yii\web\Controller
         if ($order->load(Yii::$app->request->post())) {
 
             try {
+
                 //Передаем в заказ корзину
                 $order->setCart($cart);
 
@@ -61,21 +62,15 @@ class CartController extends \yii\web\Controller
                     //Сохраняем заказ
                     $order->save();
 
-                    //Добавление блюд к заказу
-                    /** @var Dish $_dish */
-                    foreach($order->getTmpDishes() as $_dish) {
-                        $orderData = new OrderData();
-                        $orderData->dish_id = $_dish->id;
-                        $orderData->amount = $order->getCartModel()->getAmountOfSingleDish($_dish->id);
-                        $order->link('orderDatas', $orderData);
-                    }
-
                     //Очищаем корзину
                     $cart->clearCart();
+
+                    //Переход на страницу уведомления
+                    $this->redirect(['success']);
                 }
 
             } catch(Exception $e) {
-                //TODO
+                $this->redirect(['error']);
             }
 
         }
@@ -90,5 +85,13 @@ class CartController extends \yii\web\Controller
             'dishes' => Dish::findAll(array_keys($cart->getCart())),
             'cart' => $cart,
         ]);
+    }
+
+    public function actionSuccess() {
+        return $this->render('success');
+    }
+
+    public function actionError() {
+        return $this->render('error');
     }
 }

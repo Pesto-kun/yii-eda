@@ -194,10 +194,6 @@ class Restaurant extends \yii\db\ActiveRecord
             }
         }
 
-//        //Сохраянем пользователя
-//        if (isset($relatedRecords['user'])) {
-//            $this->link('user', $relatedRecords['user']);
-//        }
     }
 
     public function setUserId($id) {

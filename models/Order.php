@@ -42,7 +42,7 @@ class Order extends \yii\db\ActiveRecord
 
     //Временно сохранение загруженных блюд из корзины
     /** @var \app\models\Dish[] */
-    protected $_dishes = array();
+//    protected $_dishes = array();
 
     /**
      * @inheritdoc
@@ -131,6 +131,10 @@ class Order extends \yii\db\ActiveRecord
         return $this->hasMany(Dish::className(), ['id' => 'dish_id'])->viaTable('order_data', ['order_id' => 'id']);
     }
 
+    public function setOrderDatas($orderDatas) {
+        $this->populateRelation('orderDatas', $orderDatas);
+    }
+
     /**
      * @return array
      */
@@ -159,13 +163,13 @@ class Order extends \yii\db\ActiveRecord
         return $this->_cart;
     }
 
-    public function getTmpDishes() {
-        return $this->_dishes;
-    }
-    public function setTmpDishes($dishes) {
-        $this->_dishes = $dishes;
-        return $this;
-    }
+//    public function getTmpDishes() {
+//        return $this->_dishes;
+//    }
+//    public function setTmpDishes($dishes) {
+//        $this->_dishes = $dishes;
+//        return $this;
+//    }
 
     public function processCart() {
 
@@ -174,7 +178,9 @@ class Order extends \yii\db\ActiveRecord
         //Загружаем блюда из заказа
         /** @var Dish[] $dishes */
         $dishes = Dish::find()->where(['in', 'id', array_keys($this->getCartModel()->getCart())])->andWhere(['status' => 1])->indexBy('id')->all();
-        $this->setTmpDishes($dishes);
+//        $this->setTmpDishes($dishes);
+
+        $orderDatas = [];
 
         //Проверяем корзину
         foreach($this->getCartModel()->getCart() as $id => $amount) {
@@ -194,8 +200,15 @@ class Order extends \yii\db\ActiveRecord
                 throw new Exception('Невозможно оформить заказ с блюдами из разных заведений.');
             }
 
+            $orderData = new OrderData();
+            $orderData->dish_id = $id;
+            $orderData->amount = $amount;
+            $orderDatas[] = $orderData;
+
             $total += $amount * $dishes[$id]->price;
         }
+
+        $this->setOrderDatas($orderDatas);
 
         //ID ресторана
         $this->restaurant_id = $this->getCartModel()->getRestaurant();
@@ -209,4 +222,15 @@ class Order extends \yii\db\ActiveRecord
 
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+
+        // Получаем все связанные модели, те что загружены или установлены
+        $relatedRecords = $this->getRelatedRecords();
+        if (isset($relatedRecords['orderDatas'])) {
+            foreach ($relatedRecords['orderDatas'] as $orderData) {
+                $this->link('orderDatas', $orderData);
+            }
+        }
+    }
 }
