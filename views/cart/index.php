@@ -21,9 +21,9 @@ $total = 0;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="body-content">
-        <td class="row">
-            <p class="pull-right"><?= Html::a('Очистить корзину', ['cart/clear'],
-                    ['class' => 'btn btn-link']) ?></p>
+        <div class="row">
+            <p class="pull-right"><?= Html::a('<span class="glyphicon glyphicon-trash"></span> Очистить корзину',
+                    ['cart/clear'], ['class' => 'btn btn-link']) ?></p>
             <table class="table">
                 <?php foreach($dishes as $_dish): ?>
                     <tr id="dish-<?= $_dish->id ?>">
@@ -34,9 +34,9 @@ $total = 0;
                             <span class="in-cart"><?= $cart->getAmountOfSingleDish($_dish->id) ?></span>
                             <?= Html::a('+', null, ['onclick' => 'processCart("add",'.$_dish->id.')'])?>
                         </td>
-                        <td><?= $_dish->price ?> руб.</td>
+                        <td><?= $_dish->getPrice() ?> руб.</td>
                     </tr>
-                    <?php $total += ($_dish->price * $cart->getAmountOfSingleDish($_dish->id)); ?>
+                    <?php $total += ($_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id)); ?>
                 <?php endforeach; ?>
             </table>
         </div>

@@ -62,9 +62,11 @@ $total = 0;
                     <?php foreach($dishes as $_dish): ?>
                         <tr>
                             <td><?= $_dish->name ?></td>
-                            <td><?= $_dish->price ?> руб.</td>
+                            <td><?= $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?> руб.</td>
                         </tr>
+                        <?php $total += $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?>
                     <?php endforeach; ?>
+                    <tr><td>Итого</td><td><?= $total ?> руб.</td></tr>
                 </table>
                 <?= $form->field($order, 'comment')->textarea(['rows' => 5]) ?>
             </div>

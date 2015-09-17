@@ -14,7 +14,7 @@ use Yii;
  * @property string $name
  * @property integer $image_id
  * @property integer $weight
- * @property string $price
+ * @property float $price
  *
  * @property Image $image
  * @property Restaurant $restaurant
@@ -88,4 +88,13 @@ class Dish extends \yii\db\ActiveRecord
 //    {
 //        return $this->hasMany(OrderData::className(), ['dish_id' => 'id']);
 //    }
+
+    /**
+     * Метод получения цены блюда после всяких обработок с ней
+     *
+     * @return float
+     */
+    public function getPrice() {
+        return $this->price;
+    }
 }
