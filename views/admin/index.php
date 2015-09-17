@@ -8,7 +8,7 @@ $this->title = 'Dashboard';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<div class="site-admin">
+<div class="admin-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
