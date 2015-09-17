@@ -2,6 +2,7 @@
 
 namespace app\controllers\admin;
 
+use app\models\api\UserRestaurant;
 use app\models\FoodType;
 use app\models\Image;
 use app\models\RestaurantType;
@@ -64,31 +65,28 @@ class RestaurantController extends AdminController
     public function actionCreate()
     {
         $model = new Restaurant();
-        $image = new Image();
 
-        if(Yii::$app->request->isPost){
-            $image->uploadFile($image, 'file');
+        if ($model->load(Yii::$app->request->post())) {
 
-            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('restaurant')) {
-                $model->image_id = $image->id;
+            //Сохраняем пользователя
+            if($model->setUserId($_POST['Restaurant']['user'])) {
+
+                //Загружаем картинки
+                $model->loadUploadedImage();
+
+                //Сохраняем типы еды
+                $model->setRestaurantTypesFromPost($_POST['Restaurant']['foodTypes']);
+
+                if($model->save()) {
+                    return $this->redirect(['index']);
+                }
             }
         }
 
-        //TODO тут надо добавить транзакций
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            foreach($_POST['Restaurant']['foodTypes'] as $_foodType) {
-                $restaurantType = new RestaurantType();
-                $restaurantType->food_type_id = $_foodType;
-                $model->link('restaurantTypes', $restaurantType);
-            }
-
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'image' => $image,
-            ]);
-        }
+        return $this->render('create', [
+            'model' => $model,
+            'image' => new Image(),
+        ]);
     }
 
     /**
@@ -100,38 +98,28 @@ class RestaurantController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if($model->image) {
-            $image = $model->image;
-        } else {
-            $image = new Image();
-        }
 
-        if(Yii::$app->request->isPost){
-            $image->uploadFile($image, 'file');
+        if ($model->load(Yii::$app->request->post())) {
 
-            //TODO удалять старый файл при обновлении
-            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('restaurant')) {
-                $model->image_id = $image->id;
+            //Сохраняем пользователя
+            if($model->setUserId($_POST['Restaurant']['user'])) {
+
+                //Загружаем картинки
+                $model->loadUploadedImage();
+
+                //Сохраняем типы еды
+                $model->setRestaurantTypesFromPost($_POST['Restaurant']['foodTypes']);
+
+                if($model->save()) {
+                    return $this->redirect(['index']);
+                }
             }
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            $model->unlinkAll('restaurantTypes');
-
-            foreach($_POST['Restaurant']['foodTypes'] as $_foodType) {
-                $restaurantType = new RestaurantType();
-                $restaurantType->food_type_id = $_foodType;
-                $model->link('restaurantTypes', $restaurantType);
-            }
-
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'image' => $image,
-            ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'image' => $model->image ? $model->image : new Image(),
+        ]);
     }
 
     /**

@@ -52,6 +52,12 @@ ALTER TABLE `restaurant`
     FOREIGN KEY (`city_id`)
     REFERENCES `city` (`id`)
     ON DELETE SET NULL;
+ALTER TABLE `restaurant`
+  ADD CONSTRAINT `restaurant_image`
+  FOREIGN KEY (`image_id`)
+  REFERENCES `file` (`id`)
+  ON DELETE SET NULL;
+
 
 #Тип заведения
 CREATE TABLE `restaurant_type` (

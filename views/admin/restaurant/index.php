@@ -42,6 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Тип заведения'
             ],
             [
+                'attribute' => 'user.username',
+                'label' => 'Пользователь API'
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['width' => '80'],
                 'template' => Yii::$app->user->can('delete') ? '{update} {delete}' : '{update}',

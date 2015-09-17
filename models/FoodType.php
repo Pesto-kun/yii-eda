@@ -76,4 +76,19 @@ class FoodType extends \yii\db\ActiveRecord
         return $this->hasMany(Dish::className(), ['id' => 'food_type_id']);
     }
 
+    public function setImage($image)
+    {
+        $this->populateRelation('image', $image);
+    }
+
+    public function loadUploadedImage()
+    {
+        $image = new Image();
+        $image->uploadFile($image, 'file');
+        if ($image->isFileUploaded() && $image->validate() && $image->saveFile('food_type')) {
+            $this->image_id = $image->id;
+        }
+        $this->setImage($image);
+    }
+
 }

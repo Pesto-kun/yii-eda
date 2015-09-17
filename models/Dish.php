@@ -89,6 +89,21 @@ class Dish extends \yii\db\ActiveRecord
 //        return $this->hasMany(OrderData::className(), ['dish_id' => 'id']);
 //    }
 
+    public function setImage($image)
+    {
+        $this->populateRelation('image', $image);
+    }
+
+    public function loadUploadedImage()
+    {
+        $image = new Image();
+        $image->uploadFile($image, 'file');
+        if ($image->isFileUploaded() && $image->validate() && $image->saveFile('dish')) {
+            $this->image_id = $image->id;
+        }
+        $this->setImage($image);
+    }
+
     /**
      * Метод получения цены блюда после всяких обработок с ней
      *

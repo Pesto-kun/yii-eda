@@ -12,6 +12,7 @@ use kartik\file\FileInput;
 
 $cities = ArrayHelper::map(app\models\City::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');;
 $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');;
+$users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group' => 'api'])->asArray()->all(), 'id', 'username');;
 ?>
 
 <div class="restaurant-form">
@@ -25,6 +26,8 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'user')->dropDownList($users, ['prompt' => ' - Не указан -'])->label('Привязать пользователя') ?>
 
     <?php
     $pluginOptions = [

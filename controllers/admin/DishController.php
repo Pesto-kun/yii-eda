@@ -62,24 +62,21 @@ class DishController extends AdminController
     public function actionCreate()
     {
         $model = new Dish();
-        $image = new Image();
 
-        if(Yii::$app->request->isPost){
-            $image->uploadFile($image, 'file');
+        if ($model->load(Yii::$app->request->post())) {
 
-            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('dish')) {
-                $model->image_id = $image->id;
+            //Загружаем картинки
+            $model->loadUploadedImage();
+
+            if($model->save()) {
+                return $this->redirect(['index']);
             }
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'image' => $image,
-            ]);
-        }
+        return $this->render('create', [
+            'model' => $model,
+            'image' => new Image(),
+        ]);
     }
 
     /**
@@ -91,29 +88,21 @@ class DishController extends AdminController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if($model->image) {
-            $image = $model->image;
-        } else {
-            $image = new Image();
-        }
 
-        if(Yii::$app->request->isPost){
-            $image->uploadFile($image, 'file');
+        if ($model->load(Yii::$app->request->post())) {
 
-            //TODO удалять старый файл при обновлении
-            if ($image->isFileUploaded() && $image->validate() && $image->saveFile('dish')) {
-                $model->image_id = $image->id;
+            //Загружаем картинки
+            $model->loadUploadedImage();
+
+            if($model->save()) {
+                return $this->redirect(['index']);
             }
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'image' => $image,
-            ]);
-        }
+        return $this->render('update', [
+            'model' => $model,
+            'image' => $model->image ? $model->image : new Image(),
+        ]);
     }
 
     /**
@@ -124,7 +113,13 @@ class DishController extends AdminController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
+        if($model->image_id) {
+            /** @var $image Image */
+            $image = Image::findOne($model->image_id);
+            $image->delete();
+        }
 
         return $this->redirect(['index']);
     }
