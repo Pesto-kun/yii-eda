@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['width' => '80'],
-                'template' => '{update} {delete}',
+                'template' => Yii::$app->user->can('delete') ? '{update} {delete}' : '{update}',
             ],
         ],
     ]); ?>

@@ -48,6 +48,10 @@ $config = [
                 '' => 'site/index',
             ],
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'defaultRoles' => ['admin', 'manager', 'api'],
+        ],
     ],
     'params' => $params,
 ];

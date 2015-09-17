@@ -7,6 +7,7 @@ use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -15,6 +16,16 @@ use yii\filters\VerbFilter;
  */
 class OrderController extends AdminController
 {
+
+    public function beforeAction($action)
+    {
+        if(Yii::$app->user->identity->group === 'admin' || Yii::$app->user->can('manageOrders')) {
+            return true;
+        } else {
+            throw new ForbiddenHttpException('Access denied');
+        }
+    }
+
     public function behaviors()
     {
         return [

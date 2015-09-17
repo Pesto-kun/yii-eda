@@ -33,21 +33,27 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    $items = [
+        ['label' => 'Dashboard', 'url' => ['/admin/index']],
+        ['label' => 'Города', 'url' => ['/admin/city/index']],
+        ['label' => 'Тип еды', 'url' => ['/admin/foodtype/index']],
+        ['label' => 'Заведения', 'url' => ['/admin/restaurant/index']],
+        ['label' => 'Блюда', 'url' => ['/admin/dish/index']],
+    ];
+    if(Yii::$app->user->can('manageOrders')) {
+        $items[] = ['label' => 'Заказы', 'url' => ['/admin/order/index']];
+    }
+
+    //Выход
+    $items[] = [
+        'label' => 'Выход (' . Yii::$app->user->identity->username . ')',
+        'url' => ['/site/logout'],
+        'linkOptions' => ['data-method' => 'post']
+    ];
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Dashboard', 'url' => ['/admin/index']],
-            ['label' => 'Города', 'url' => ['/admin/city/index']],
-            ['label' => 'Тип еды', 'url' => ['/admin/foodtype/index']],
-            ['label' => 'Заведения', 'url' => ['/admin/restaurant/index']],
-            ['label' => 'Блюда', 'url' => ['/admin/dish/index']],
-            ['label' => 'Заказы', 'url' => ['/admin/order/index']],
-            [
-                'label' => 'Выход (' . Yii::$app->user->identity->username . ')',
-                'url' => ['/site/logout'],
-                'linkOptions' => ['data-method' => 'post']
-            ],
-        ],
+        'items' => $items,
     ]);
     NavBar::end();
     ?>
