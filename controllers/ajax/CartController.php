@@ -2,9 +2,11 @@
 
 namespace app\controllers\ajax;
 
+use app\models\api\UserAccess;
 use Yii;
 use Exception;
 use app\models\Cart;
+use yii\base\UserException;
 use yii\web\Response;
 
 class CartController extends \yii\web\Controller
@@ -13,12 +15,22 @@ class CartController extends \yii\web\Controller
     const STATUS_ERROR = 'error';
     const STATUS_UNKNOWN = 'unknown';
 
+    protected $_return = array(
+        'status' => self::STATUS_UNKNOWN,
+        'message' => '',
+    );
+
+    protected function setReturn($key, $value) {
+        $this->_return[$key] = $value;
+        return $this;
+    }
+
+    protected function getReturn() {
+        return $this->_return;
+    }
+
     public function actionAdd()
     {
-        $return = array(
-            'status' => self::STATUS_UNKNOWN,
-            'message' => '',
-        );
 
         try {
 
@@ -35,26 +47,21 @@ class CartController extends \yii\web\Controller
             $cart->addItem($data['id'], 1);
 
             //Получаем количество данного блюда
-            $return['amount'] = $cart->getAmountOfSingleDish($data['id']);
+            $this->setReturn('amount', $cart->getAmountOfSingleDish($data['id']));
 
-            $return['status'] = self::STATUS_SUCCESS;
+            $this->setReturn('status', self::STATUS_SUCCESS);
 
         } catch(Exception $e) {
-            $return['status'] = self::STATUS_ERROR;
-            $return['message'] = $e->getMessage();
+            $this->setReturn('status', self::STATUS_ERROR);
+            $this->setReturn('message', $e->getMessage());
         }
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return $return;
+        return $this->getReturn();
     }
 
     public function actionReduce()
     {
-        $return = array(
-            'status' => self::STATUS_UNKNOWN,
-            'message' => '',
-        );
-
         try {
 
             $data = Yii::$app->request->post();
@@ -70,17 +77,51 @@ class CartController extends \yii\web\Controller
             $cart->reduceItem($data['id'], 1);
 
             //Получаем количество данного блюда
-            $return['amount'] = $cart->getAmountOfSingleDish($data['id']);
+            $this->setReturn('amount', $cart->getAmountOfSingleDish($data['id']));
 
-            $return['status'] = self::STATUS_SUCCESS;
+            $this->setReturn('status', self::STATUS_SUCCESS);
 
         } catch(Exception $e) {
-            $return['status'] = self::STATUS_ERROR;
-            $return['message'] = $e->getMessage();
+            $this->setReturn('status', self::STATUS_ERROR);
+            $this->setReturn('message', $e->getMessage());
         }
 
         Yii::$app->response->format = Response::FORMAT_JSON;
-        return $return;
+        return $this->getReturn();
     }
+
+    /**
+     * Проверка доступности заведения
+     */
+    public function actionAvailable() {
+
+        //Данные корзины
+        $cart = new Cart();
+
+        try {
+
+            //Проверка доступности заведения
+            /** @var UserAccess $userAccess */
+            $userAccess = UserAccess::findOne($cart->getRestaurant());
+
+            if(!$userAccess) {
+                throw new UserException('В данный момент заведение недоступно для оформления заказа. Пожалуйста, попробуйте позже.');
+            }
+
+            if($userAccess->isOnline()) {
+                $this->setReturn('status', self::STATUS_SUCCESS);
+            } else {
+                throw new UserException('Заведение в оффлайне.');
+            }
+
+        } catch(UserException $e) {
+            $this->setReturn('status', self::STATUS_ERROR);
+            $this->setReturn('message', $e->getMessage());
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return $this->getReturn();
+    }
+
 
 }

@@ -5,7 +5,6 @@ namespace app\controllers;
 use app\models\Cart;
 use app\models\Dish;
 use app\models\Order;
-use app\models\OrderData;
 use Exception;
 use Yii;
 
@@ -70,9 +69,8 @@ class CartController extends \yii\web\Controller
                 }
 
             } catch(Exception $e) {
-                $this->redirect(['error']);
+                return $this->redirect(['error']);
             }
-
         }
 
         //Если корзина пуста

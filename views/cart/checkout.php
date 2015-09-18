@@ -4,12 +4,16 @@
 /* @var $cart app\models\Cart */
 /* @var $order app\models\Order */
 
-//use nirvana\showloading\ShowLoadingAsset;
+use nirvana\showloading\ShowLoadingAsset;
 use yii\bootstrap\ActiveForm;
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 
 //Подключение стилей и скритов для прелоадера
-//ShowLoadingAsset::register($this);
+ShowLoadingAsset::register($this);
+
+//Скрипт для добавления\редактирвоания корзины
+$this->registerJsFile('/js/cart.js', ['depends' => 'yii\web\JqueryAsset']);
 
 $this->title = 'Оформление заказа';
 $total = 0;
@@ -24,58 +28,73 @@ $total = 0;
             <?php $form = ActiveForm::begin([
                 'id' => 'checkout-form',
             ]); ?>
-            <div class="col-md-7">
-                <div class="col-sm-12">
-                    <?= $form->field($order, 'delivery_method')->radioList([
-                        'self' => 'Самовывоз',
-                        'address' => 'Доставка по адерсу',
-                        'door' => 'Доставка до двери',
-                    ]) ?>
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($order, 'phone')->textInput(['placeholder' => '+7(___)___-__-__'])->label('Ваш телефон') ?>
-                </div>
-                <div class="col-sm-6">
-                    <?= $form->field($order, 'username')->textInput()->label('Ваше имя') ?>
-                </div>
-                <div class="form-group">
+            <div class="form-group" id="checkout-fields">
+                <div class="col-md-7">
+                    <div class="col-sm-12">
+                        <?= $form->field($order, 'delivery_method')->radioList([
+                            'self' => 'Самовывоз',
+                            'address' => 'Доставка по адерсу',
+                            'door' => 'Доставка до двери',
+                        ]) ?>
+                    </div>
                     <div class="col-sm-6">
-                        <?= $form->field($order, 'street')->textInput()->label('Адрес доставки') ?>
+                        <?= $form->field($order, 'phone')->textInput(['placeholder' => '+7(___)___-__-__'])->label('Ваш телефон') ?>
                     </div>
-                    <div class="col-sm-2">
-                        <?= $form->field($order, 'house')->textInput(['placeholder' => 'Дом'])->label('') ?>
+                    <div class="col-sm-6">
+                        <?= $form->field($order, 'username')->textInput()->label('Ваше имя') ?>
                     </div>
-                    <div class="col-sm-2">
-                        <?= $form->field($order, 'apartment')->textInput(['placeholder' => 'Кв'])->label('') ?>
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <?= $form->field($order, 'street')->textInput()->label('Адрес доставки') ?>
+                        </div>
+                        <div class="col-sm-2">
+                            <?= $form->field($order, 'house')->textInput(['placeholder' => 'Дом'])->label('') ?>
+                        </div>
+                        <div class="col-sm-2">
+                            <?= $form->field($order, 'apartment')->textInput(['placeholder' => 'Кв'])->label('') ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <?= $form->field($order, 'payment_method')->radioList([
+                            'offline' => 'Наложенный платеж',
+                            'online' => 'Безналчиный расчет',
+                        ])->label('Выберите способ оплаты') ?>
                     </div>
                 </div>
-                <div class="col-sm-12">
-                    <?= $form->field($order, 'payment_method')->radioList([
-                        'offline' => 'Наложенный платеж',
-                        'online' => 'Безналчиный расчет',
-                    ])->label('Выберите способ оплаты') ?>
+                <div class="col-md-5">
+                    <h4>Ваш заказ:</h4>
+                    <table class="table">
+                        <?php foreach($dishes as $_dish): ?>
+                            <tr>
+                                <td><?= $_dish->name ?></td>
+                                <td><?= $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?> руб.</td>
+                            </tr>
+                            <?php $total += $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?>
+                        <?php endforeach; ?>
+                        <tr><td>Итого</td><td><?= $total ?> руб.</td></tr>
+                    </table>
+                    <?= $form->field($order, 'comment')->textarea(['rows' => 5]) ?>
                 </div>
+
+                <div class="clearfix"></div>
             </div>
-            <div class="col-md-5">
-                <h4>Ваш заказ:</h4>
-                <table class="table">
-                    <?php foreach($dishes as $_dish): ?>
-                        <tr>
-                            <td><?= $_dish->name ?></td>
-                            <td><?= $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?> руб.</td>
-                        </tr>
-                        <?php $total += $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?>
-                    <?php endforeach; ?>
-                    <tr><td>Итого</td><td><?= $total ?> руб.</td></tr>
-                </table>
-                <?= $form->field($order, 'comment')->textarea(['rows' => 5]) ?>
-            </div>
-            <div class="clearfix"></div>
             <div class="form-group col-sm-12">
-                <?= Html::submitButton('Оформить заказ', ['class' => 'btn btn-primary', 'name' => 'checkout-button']) ?>
+                <?= Html::submitButton('Оформить заказ', ['class' => 'btn btn-primary',
+                    'name' => 'checkout-button', 'id' => 'checkout-cart']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
+        </div>
+
+        <div class="row">
+            <?php
+            Modal::begin([
+                'header' => 'Ошибка!',
+                'id' => 'cartModal',
+            ]);
+            echo '...';
+            Modal::end();
+            ?>
         </div>
     </div>
 </div>

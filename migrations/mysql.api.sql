@@ -1,10 +1,10 @@
 #Таблица последнего доступа пользователя к апи
-CREATE TABLE `api_access` (
+CREATE TABLE `api_user_access` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `last_access` TIMESTAMP,
   UNIQUE KEY (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
-ALTER TABLE `api_access`
+ALTER TABLE `api_user_access`
   ADD CONSTRAINT `api_access_user`
   FOREIGN KEY (`user_id`)
   REFERENCES `user` (`id`)
