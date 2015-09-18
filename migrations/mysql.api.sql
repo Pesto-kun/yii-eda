@@ -2,7 +2,8 @@
 CREATE TABLE `api_user_access` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `last_access` TIMESTAMP,
-  UNIQUE KEY (`user_id`)
+  `session_id` varchar(255),
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 ALTER TABLE `api_user_access`
   ADD CONSTRAINT `api_access_user`

@@ -3,13 +3,16 @@
 namespace app\models\api;
 
 use app\models\User;
+use Exception;
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "api_user_access".
  *
  * @property integer $user_id
  * @property string $last_access
+ * @property string $session_id
  *
  * @property User $user
  */
@@ -35,7 +38,7 @@ class UserAccess extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['user_id'], 'integer'],
-            [['last_access'], 'safe'],
+            [['last_access', 'session_id'], 'safe'],
             [['user_id'], 'unique']
         ];
     }
@@ -61,5 +64,34 @@ class UserAccess extends \yii\db\ActiveRecord
 
     public function isOnline() {
         return (time() < (date("U",strtotime($this->last_access)) + self::ONLINE_TIMER));
+    }
+
+    /**
+     * Метод выдачи сессии пользователю для доступа по API
+     *
+     * @param $user User
+     * @param $pass
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function authorizeUser($user, $pass) {
+
+        //Проверяем, что пользователю доступна авторизаця через API
+        if($user->group !== 'api') {
+            throw new Exception('Login or password incorrect', Error::ERR_LOGIN);
+        }
+
+        //Проверяем пароль
+        if(!$user->validatePassword($pass)) {
+            throw new Exception('Login or password incorrect', Error::ERR_LOGIN);
+        }
+
+        $this->user_id = $user->id;
+        $this->last_access = new Expression('NOW()');
+        $this->session_id = Yii::$app->getSecurity()->generateRandomString();
+
+        //Сохраняем изменения
+        $this->save();
     }
 }
