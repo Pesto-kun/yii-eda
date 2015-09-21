@@ -3,8 +3,8 @@
 namespace app\models\api;
 
 use app\models\User;
-use Exception;
 use Yii;
+use yii\base\UserException;
 use yii\db\Expression;
 
 /**
@@ -18,9 +18,12 @@ use yii\db\Expression;
  */
 class UserAccess extends \yii\db\ActiveRecord
 {
-    //количество секунд с последнего доступа пользователья через апи
+    //Количество секунд с последнего доступа пользователья через апи
     //в течении которых пользователь считается онлайн и оформление заказа возможно
     const ONLINE_TIMER = 100;
+    //Время жизни сессии
+    //Считается время с последнего доступа пользователя
+    const SESSION_LIFETIME = 43200; //12 часов
 
     /**
      * @inheritdoc
@@ -62,8 +65,33 @@ class UserAccess extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    /**
+     * Метод проверки времени
+     *
+     * @param $sec
+     *
+     * @return bool
+     */
+    protected function _checkTime($sec) {
+        return (time() < (date("U",strtotime($this->last_access)) + $sec));
+    }
+
+    /**
+     * Проверка пользователя онлайн
+     *
+     * @return bool
+     */
     public function isOnline() {
-        return (time() < (date("U",strtotime($this->last_access)) + self::ONLINE_TIMER));
+        return $this->_checkTime(self::ONLINE_TIMER);
+    }
+
+    /**
+     * Проверка времени жизни сессии
+     *
+     * @return bool
+     */
+    public function checkSessionTime() {
+        return $this->_checkTime(self::SESSION_LIFETIME);
     }
 
     /**
@@ -73,18 +101,18 @@ class UserAccess extends \yii\db\ActiveRecord
      * @param $pass
      *
      * @return bool
-     * @throws Exception
+     * @throws UserException
      */
     public function authorizeUser($user, $pass) {
 
         //Проверяем, что пользователю доступна авторизаця через API
         if($user->group !== 'api') {
-            throw new Exception('Login or password incorrect', Error::ERR_LOGIN);
+            throw new UserException('Login or password incorrect', Error::ERR_LOGIN);
         }
 
         //Проверяем пароль
         if(!$user->validatePassword($pass)) {
-            throw new Exception('Login or password incorrect', Error::ERR_LOGIN);
+            throw new UserException('Login or password incorrect', Error::ERR_LOGIN);
         }
 
         $this->user_id = $user->id;

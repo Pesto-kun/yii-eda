@@ -13,6 +13,8 @@ class Error {
     const ERR_METHOD = 102;                     //Неизвестный метод
     const ERR_LOGIN = 103;                      //Неверный логин или пароль
     const ERR_SESSION = 104;                    //Неверный ключ сессии
+    const ERR_SESSION_EXPIRE = 105;             //Сессия устарела
+    const ERR_RESTAURANT_MISSING = 105;         //Пользователю не присвоен ресторан
 
     const ERR_UNKNOWN = 999;
 

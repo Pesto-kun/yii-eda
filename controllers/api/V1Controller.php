@@ -4,17 +4,22 @@ namespace app\controllers\api;
 
 use app\models\api\Error;
 use app\models\api\UserAccess;
-use app\models\api\v1\Param;
+use app\models\api\UserRestaurant;
+use app\models\api\v1\Process;
+use app\models\Order;
 use app\models\User;
 use Exception;
 use Yii;
+use yii\base\UserException;
 use yii\web\Response;
 
 class V1Controller extends ApiController
 {
 
+    const VER = '1.0.0';
+
     /**
-     * @return Param
+     * @return Process
      */
     protected function getParam() {
         return parent::getParam();
@@ -23,7 +28,7 @@ class V1Controller extends ApiController
     public function beforeAction($action) {
 
         //Модель для работы с данными
-        $model = new Param();
+        $model = new Process();
         $this->param = $model;
 
         //Получаем данные из поста
@@ -33,20 +38,13 @@ class V1Controller extends ApiController
         $model->checkRequired($action->id);
 
         //Если это не авторизация
-        if($action != 'auth' && !$this->getParam()->hasError()) {
+        if($action->id != 'auth' && !$this->getParam()->hasError()) {
 
             //Проверяем ключ сессии
             $session_id = $model->getData($model::FIELD_SESSION);
 
-            /** @var UserAccess $userAccess */
-            $userAccess = UserAccess::findOne(['session_id' => $session_id]);
-
-            //Если ключ доступа не найден
-            if(!$userAccess) {
-                $model->setError(Error::ERR_SESSION, 'Unknown session');
-            }
-
-            //TODO Проверяем время последнего доступа
+            //Загружаем данные пользователя
+            $model->loadUser($session_id);
 
         }
 
@@ -112,12 +110,14 @@ class V1Controller extends ApiController
 
             try {
 
-                //TODO вернуть список заказов
+                //TODO
+                $model->getNewOrders();
 
+            } catch(UserException $e) {
+                $model->setError($e->getCode(), $e->getMessage());
             } catch(Exception $e) {
                 $model->setError($e->getCode(), $e->getMessage());
             }
-
         }
 
         Yii::$app->response->format = Response::FORMAT_JSON;
