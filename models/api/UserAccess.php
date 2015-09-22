@@ -106,7 +106,8 @@ class UserAccess extends \yii\db\ActiveRecord
     public function authorizeUser($user, $pass) {
 
         //Проверяем, что пользователю доступна авторизаця через API
-        if($user->group !== 'api') {
+        //TODO переделать под ->can()
+        if(!in_array($user->group, array('restaurant', 'delivery'))) {
             throw new UserException('Login or password incorrect', Error::ERR_LOGIN);
         }
 

@@ -21,11 +21,10 @@ class RbacController extends Controller
         $guest  = $authManager->createRole('guest');
         $admin  = $authManager->createRole('admin');
         $manager  = $authManager->createRole('manager');
-        $api = $authManager->createRole('api');
+        $restaurant = $authManager->createRole('restaurant');
+        $delivery = $authManager->createRole('delivery');
 
         // Create simple, based on action{$NAME} permissions
-        $sync = $authManager->createPermission('sync');
-        $manage = $authManager->createPermission('manage');
         $index = $authManager->createPermission('index');
         $create = $authManager->createPermission('create');
         $view = $authManager->createPermission('view');
@@ -33,16 +32,16 @@ class RbacController extends Controller
         $delete = $authManager->createPermission('delete');
 
         //other permissions
+        $manage = $authManager->createPermission('manage');
         $manageOrders = $authManager->createPermission('manageOrders');
 
         // Add permissions in Yii::$app->authManager
-        $authManager->add($sync);
-        $authManager->add($manage);
         $authManager->add($index);
         $authManager->add($create);
         $authManager->add($view);
         $authManager->add($update);
         $authManager->add($delete);
+        $authManager->add($manage);
         $authManager->add($manageOrders);
 
         // Add rule, based on UserExt->group === $user->group
@@ -52,22 +51,26 @@ class RbacController extends Controller
         // Add rule "UserGroupRule" in roles
         $guest->ruleName  = $userGroupRule->name;
         $manager->ruleName  = $userGroupRule->name;
-        $api->ruleName = $userGroupRule->name;
         $admin->ruleName  = $userGroupRule->name;
+        $restaurant->ruleName  = $userGroupRule->name;
+        $delivery->ruleName  = $userGroupRule->name;
 
         // Add roles in Yii::$app->authManager
         $authManager->add($guest);
         $authManager->add($manager);
-        $authManager->add($api);
         $authManager->add($admin);
+        $authManager->add($restaurant);
+        $authManager->add($delivery);
 
         // Add permission-per-role in Yii::$app->authManager
         // Guest
         $authManager->addChild($guest, $view);
 
-        // api
-        $authManager->addChild($api, $sync);
-        $authManager->addChild($api, $guest);
+        // Restaurant
+        $authManager->addChild($restaurant, $guest);
+
+        // Delivery
+        $authManager->addChild($delivery, $guest);
 
         // manager
         $authManager->addChild($manager, $index);

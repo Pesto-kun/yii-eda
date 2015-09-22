@@ -1,11 +1,5 @@
 <?php
 return [
-    'sync' => [
-        'type' => 2,
-    ],
-    'manage' => [
-        'type' => 2,
-    ],
     'index' => [
         'type' => 2,
     ],
@@ -19,6 +13,9 @@ return [
         'type' => 2,
     ],
     'delete' => [
+        'type' => 2,
+    ],
+    'manage' => [
         'type' => 2,
     ],
     'manageOrders' => [
@@ -42,14 +39,6 @@ return [
             'guest',
         ],
     ],
-    'api' => [
-        'type' => 1,
-        'ruleName' => 'userGroup',
-        'children' => [
-            'sync',
-            'guest',
-        ],
-    ],
     'admin' => [
         'type' => 1,
         'ruleName' => 'userGroup',
@@ -57,6 +46,20 @@ return [
             'delete',
             'manageOrders',
             'manager',
+        ],
+    ],
+    'restaurant' => [
+        'type' => 1,
+        'ruleName' => 'userGroup',
+        'children' => [
+            'guest',
+        ],
+    ],
+    'delivery' => [
+        'type' => 1,
+        'ruleName' => 'userGroup',
+        'children' => [
+            'guest',
         ],
     ],
 ];

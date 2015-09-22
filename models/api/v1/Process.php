@@ -121,6 +121,7 @@ class Process extends Model {
                 $required_params = array(self::FIELD_LOGIN, self::FIELD_PASS);
                 break;
             case 'orders':
+            case 'delivery-list':
                 $required_params = array(self::FIELD_SESSION);
                 break;
             case 'order-accept':
@@ -141,34 +142,76 @@ class Process extends Model {
     }
 
     /**
+     * Проверка доступа к экшену по роли
+     *
+     * @param $action
+     */
+    public function checkActionAccess($action) {
+
+        switch($this->getUserAccess()->user->group) {
+            case 'restaurant':
+
+                $actions = ['auth', 'orders', 'order-accept'];
+
+                //Загружаем даныне ресторана пользователя
+                $this->loadUserRestaurant();
+
+                break;
+            case 'delivery':
+                $actions = ['auth', 'delivery-list'];
+                break;
+            default:
+                $this->setError(Error::ERR_UNKNOWN, 'Unknown user group.');
+        }
+
+        if(!$this->hasError()) {
+            if(!isset($actions) || !$actions || !in_array($action, $actions)) {
+                $this->setError(Error::ERR_DENY, 'Access deny.');
+            }
+        }
+    }
+
+    /**
      * Загрузка данных пользователя по сессии
      *
      * @param $session_id
      */
     public function loadUser($session_id) {
 
-        $this->_userAccess = UserAccess::findOne(['session_id' => $session_id]);
+        if(!$this->hasError()) {
 
-        //Если ключ доступа не найден
-        if(!$this->getUserAccess()) {
-            $this->setError(Error::ERR_SESSION, 'Unknown session.');
+            $this->_userAccess = UserAccess::findOne(['session_id' => $session_id]);
+
+            //Если ключ доступа не найден
+            if(!$this->getUserAccess()) {
+                $this->setError(Error::ERR_SESSION, 'Unknown session.');
 
             //Проверяем время с последнего доступа
-        } elseif(!$this->getUserAccess()->checkSessionTime()) {
-            $this->setError(Error::ERR_SESSION_EXPIRE, 'Session is expire.');
+            } elseif(!$this->getUserAccess()->checkSessionTime()) {
+                $this->setError(Error::ERR_SESSION_EXPIRE, 'Session is expire.');
+            }
         }
 
-        //Поиск необходимого ресторана
-        $this->_userRestaurant = UserRestaurant::findOne(['user_id' => $this->getUserAccess()->user_id]);
+    }
 
-        //Если пользователю не присвоен ресторан
-        if(!$this->getUserRestaurant()) {
-            $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
+    /**
+     * Загрузка данных ресторана пользователя
+     */
+    public function loadUserRestaurant() {
 
-        //Проверяем статус ресторана
-        //TODO возможно это надо убрать
-        } elseif(!$this->getUserRestaurant()->restaurant->status) {
-            $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
+        if(!$this->hasError()) {
+            //Поиск необходимого ресторана
+            $this->_userRestaurant = UserRestaurant::findOne(['user_id' => $this->getUserAccess()->user_id]);
+
+            //Если пользователю не присвоен ресторан
+            if(!$this->getUserRestaurant()) {
+                $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
+
+                //Проверяем статус ресторана
+                //TODO возможно это надо убрать
+            } elseif(!$this->getUserRestaurant()->restaurant->status) {
+                $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
+            }
         }
     }
 
@@ -179,6 +222,7 @@ class Process extends Model {
 
         //Если ошибок нет
         if(!$this->hasError()) {
+
             //TODO вернуть список заказов
             $orders = Order::find()->where([
                 'status' => Order::STATUS_NEW,
@@ -235,28 +279,60 @@ class Process extends Model {
 
             //Загружаем данные заказа
             /** @var Order $order */
-            $order = Order::findOne(['id' => $this->getData(self::FIELD_ORDER_ID),'status' => Order::STATUS_NEW]);
+            $order = Order::findOne([
+                'id' => $this->getData(self::FIELD_ORDER_ID),
+                'status' => Order::STATUS_NEW,
+                'restaurant_id' => $this->getUserRestaurant()->restaurant_id,
+                ]);
             if(!$order) {
                 $this->setError(Error::ERR_ORDER_UNKNOWN, 'Unknown order id.');
-
-            //Проверяем, что данный пользователь имеет доступ к этому ресторану
-            } elseif($order->restaurant_id != $this->getUserRestaurant()->restaurant_id) {
-                //TODO возможно следует вызвать другую ошибку
-                $this->setError(Error::ERR_ORDER_UNKNOWN, 'Unknown order id.');
             } else {
-                //Изменяем статус
-                $order->status = Order::STATUS_PROCESSED;
-                $order->accepted = date('Y-m-d H:i:s');
-                if($order->save()) {
-                    $this->setResult('acceptedAt', $order->accepted);
 
-                    //TODO отправить смс пользователю
-                } else {
-                    $this->setError(Error::ERR_SAVING, 'Order status not saved.');
-                }
+                //Изменяем статус
+                $order->status = Order::STATUS_DELIVERY_REQUIRED;
+                $order->accepted = date('Y-m-d H:i:s');
+                $order->save();
+
+                //TODO Отправить пользователю СМС
+
+                //Возваращаем время
+                $this->setResult('acceptedAt', $order->accepted);
+            }
+        }
+    }
+
+    /**
+     * Получение списка на доставку
+     */
+    public function getDeliveryList() {
+        if(!$this->hasError()) {
+
+            //Получаем список заказов со статусом "необходима доставка"
+            $orders = Order::findAll(['status' => Order::STATUS_DELIVERY_REQUIRED]);
+            $return = array();
+
+            /** @var Order $_order */
+            foreach($orders as $_order) {
+
+                $address = 'ул.' . $_order->street . ', д.' . $_order->house .
+                    ($_order->apartment ? ', кв.'.$_order->apartment : '');
+
+                $return[] = [
+                    'order_id' => $_order->id,
+                    'createdAt' => $_order->created,
+                    'acceptedAt' => $_order->accepted,
+                    'readyToDeliveryAt' => null,
+                    'cookingTime' => null,
+                    'restaurant_id' => $_order->restaurant_id,
+                    'sum' => $_order->total_cost,
+                    'user_name' => $_order->username,
+                    'user_phone' => $_order->phone,
+                    'delivery_address' => $address,
+                    'comment' => $_order->comment,
+                ];
             }
 
+            $this->setResult('orderList', $return);
         }
-
     }
 }

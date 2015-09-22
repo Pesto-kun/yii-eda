@@ -37,6 +37,7 @@ class Order extends \yii\db\ActiveRecord
     const STATUS_NEW = 'new';
     const STATUS_CANCEL = 'cancel';
     const STATUS_PROCESSED = 'process';
+    const STATUS_DELIVERY_REQUIRED = 'delivery_required';
 
     /** @var \app\models\Cart */
     protected $_cart = null;

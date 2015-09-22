@@ -4,9 +4,7 @@ namespace app\controllers\api;
 
 use app\models\api\Error;
 use app\models\api\UserAccess;
-use app\models\api\UserRestaurant;
 use app\models\api\v1\Process;
-use app\models\Order;
 use app\models\User;
 use Exception;
 use Yii;
@@ -34,18 +32,29 @@ class V1Controller extends ApiController
         //Получаем данные из поста
         $model->setData(Yii::$app->request->get()); //TODO поменять на post
 
-        //Проверем наличие обязательных параметров
-        $model->checkRequired($action->id);
+        try {
 
-        //Если это не авторизация
-        if($action->id != 'auth' && !$this->getParam()->hasError()) {
+            //Проверем наличие обязательных параметров
+            $model->checkRequired($action->id);
 
-            //Проверяем ключ сессии
-            $session_id = $model->getData($model::FIELD_SESSION);
+            //Если это не авторизация
+            if($action->id != 'auth' && !$model->hasError()) {
 
-            //Загружаем данные пользователя
-            $model->loadUser($session_id);
+                //Проверяем ключ сессии
+                $session_id = $model->getData($model::FIELD_SESSION);
 
+                //Загружаем данные пользователя
+                $model->loadUser($session_id);
+
+                //Проверям доступ в зависимости от роли
+                $model->checkActionAccess($action->id);
+
+            }
+
+        } catch(UserException $e) {
+            $model->setError($e->getCode(), $e->getMessage());
+        } catch(Exception $e) {
+            $model->setError($e->getCode(), $e->getMessage());
         }
 
         return parent::beforeAction($action);
@@ -85,6 +94,8 @@ class V1Controller extends ApiController
                 $userAccess->authorizeUser($user, $model->getData($model::FIELD_PASS));
                 $model->setResult($model::FIELD_SESSION, $userAccess->session_id);
 
+            } catch(UserException $e) {
+                $model->setError($e->getCode(), $e->getMessage());
             } catch(Exception $e) {
                 $model->setError($e->getCode(), $e->getMessage());
             }
@@ -142,6 +153,36 @@ class V1Controller extends ApiController
 
                 //Изменение статуса заказа
                 $model->changeOrderStatus();
+
+            } catch(UserException $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            } catch(Exception $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            }
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return $model->getReturn();
+
+    }
+
+    /**
+     * Получение списка заявок на доставку
+     *
+     * @return array
+     */
+    public function actionDeliveryList() {
+
+        //Модель для работы с данными
+        $model = $this->getParam();
+
+        //Проверяем наличие ошибок
+        if(!$model->hasError()) {
+
+            try {
+
+                //Получаем список заявок на доставку
+                $model->getDeliveryList();
 
             } catch(UserException $e) {
                 $model->setError($e->getCode(), $e->getMessage());

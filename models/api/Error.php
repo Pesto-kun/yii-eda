@@ -17,6 +17,7 @@ class Error {
     const ERR_RESTAURANT_MISSING = 106;         //Пользователю не присвоен ресторан
     const ERR_ORDER_UNKNOWN = 107;              //Не найден заказ
     const ERR_SAVING = 108;                     //Ошибка сохранения
+    const ERR_DENY = 109;                       //Доступ запрещен
 
     const ERR_UNKNOWN = 999;
 
