@@ -14,6 +14,7 @@ use yii\db\Expression;
  * @property string $status
  * @property string $created
  * @property string $updated
+ * @property string $accepted
  * @property integer $restaurant_id
  * @property string $delivery_method
  * @property string $delivery_time
@@ -64,7 +65,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             [['delivery_method', 'payment_method', 'phone', 'username', 'street', 'house'], 'required'],
-            [['created', 'updated'], 'safe'],
+            [['created', 'updated', 'accepted'], 'safe'],
             [['restaurant_id'], 'integer'],
             [['comment'], 'string'],
             [['status', 'delivery_method', 'delivery_cost', 'payment_method'], 'string', 'max' => 32],
@@ -82,6 +83,7 @@ class Order extends \yii\db\ActiveRecord
             'status' => 'Статус',
             'created' => 'Дата создания',
             'updated' => 'Обновлено',
+            'accepted' => 'Принятно к обработке',
             'restaurant_id' => 'ID заведения',
             'delivery_method' => 'Способ доставки',
             'delivery_time' => 'Время доставки',

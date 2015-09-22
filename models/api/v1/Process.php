@@ -20,6 +20,7 @@ class Process extends Model {
     const FIELD_LOGIN = 'login';
     const FIELD_PASS = 'pass';
     const FIELD_SESSION = 'session';
+    const FIELD_ORDER_ID = 'order_id';
 
     protected $_return = array(
         '_' => null,
@@ -122,6 +123,9 @@ class Process extends Model {
             case 'orders':
                 $required_params = array(self::FIELD_SESSION);
                 break;
+            case 'order-accept':
+                $required_params = array(self::FIELD_SESSION, self::FIELD_ORDER_ID);
+                break;
             default:
                 $required_params = array();
                 $this->setError(Error::ERR_METHOD, 'Unknown method: ' . $action);
@@ -147,11 +151,24 @@ class Process extends Model {
 
         //Если ключ доступа не найден
         if(!$this->getUserAccess()) {
-            $this->setError(Error::ERR_SESSION, 'Unknown session');
+            $this->setError(Error::ERR_SESSION, 'Unknown session.');
 
             //Проверяем время с последнего доступа
         } elseif(!$this->getUserAccess()->checkSessionTime()) {
             $this->setError(Error::ERR_SESSION_EXPIRE, 'Session is expire.');
+        }
+
+        //Поиск необходимого ресторана
+        $this->_userRestaurant = UserRestaurant::findOne(['user_id' => $this->getUserAccess()->user_id]);
+
+        //Если пользователю не присвоен ресторан
+        if(!$this->getUserRestaurant()) {
+            $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
+
+        //Проверяем статус ресторана
+        //TODO возможно это надо убрать
+        } elseif(!$this->getUserRestaurant()->restaurant->status) {
+            $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
         }
     }
 
@@ -159,19 +176,6 @@ class Process extends Model {
      * Получение новых заказов в ресторане
      */
     public function getNewOrders() {
-
-        //Поиск необходимого ресторана
-        $this->_userRestaurant = UserRestaurant::findOne(['user_id' => $this->getUserAccess()->user_id]);
-
-        //Если пользователю не присвоен ресторан
-        if(!$this->getUserRestaurant()) {
-            $this->setError(Error::ERR_RESTAURANT_MISSING, 'Restaurant data is missing.');
-
-            //Проверяем статус ресторана
-            //TODO возможно это надо убрать
-        } elseif(!$this->getUserRestaurant()->restaurant->status) {
-            $this->setError(Error::ERR_RESTAURANT_MISSING, 'Restaurant data is missing.');
-        }
 
         //Если ошибок нет
         if(!$this->hasError()) {
@@ -202,19 +206,57 @@ class Process extends Model {
                     $return[] = [
                         'order_id' => $_order->id,
                         'status' => $_order->status,
-                        'created' => $_order->created,
+                        'createdAt' => $_order->created,
+                        'acceptedAt' => null,
+                        'readyToDeliveryAt' => null,
+                        'cookingTime' => null,
                         'restaurant_id' => $_order->restaurant_id,
-                        'total_cost' => $_order->total_cost,
+                        'sum' => $_order->total_cost,
                         'user_name' => $_order->username,
                         'user_phone' => $_order->phone,
                         'delivery_address' => $address,
                         'comment' => $_order->comment,
-                        'order' => $orderList,
+                        'orderContent' => $orderList,
+                        'carInfo' => null,
                     ];
                 }
 
                 $this->setResult('orderList', $return);
             }
         }
+    }
+
+    /**
+     * Обновление статуса заказа
+     */
+    public function changeOrderStatus() {
+
+        if(!$this->hasError()) {
+
+            //Загружаем данные заказа
+            /** @var Order $order */
+            $order = Order::findOne(['id' => $this->getData(self::FIELD_ORDER_ID),'status' => Order::STATUS_NEW]);
+            if(!$order) {
+                $this->setError(Error::ERR_ORDER_UNKNOWN, 'Unknown order id.');
+
+            //Проверяем, что данный пользователь имеет доступ к этому ресторану
+            } elseif($order->restaurant_id != $this->getUserRestaurant()->restaurant_id) {
+                //TODO возможно следует вызвать другую ошибку
+                $this->setError(Error::ERR_ORDER_UNKNOWN, 'Unknown order id.');
+            } else {
+                //Изменяем статус
+                $order->status = Order::STATUS_PROCESSED;
+                $order->accepted = date('Y-m-d H:i:s');
+                if($order->save()) {
+                    $this->setResult('acceptedAt', $order->accepted);
+
+                    //TODO отправить смс пользователю
+                } else {
+                    $this->setError(Error::ERR_SAVING, 'Order status not saved.');
+                }
+            }
+
+        }
+
     }
 }

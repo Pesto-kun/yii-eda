@@ -110,8 +110,38 @@ class V1Controller extends ApiController
 
             try {
 
-                //TODO
+                //Получение списка новых заказов
                 $model->getNewOrders();
+
+            } catch(UserException $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            } catch(Exception $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            }
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return $model->getReturn();
+
+    }
+
+    /**
+     * Принятие заказа
+     *
+     * @return array
+     */
+    public function actionOrderAccept() {
+
+        //Модель для работы с данными
+        $model = $this->getParam();
+
+        //Проверяем наличие ошибок
+        if(!$model->hasError()) {
+
+            try {
+
+                //Изменение статуса заказа
+                $model->changeOrderStatus();
 
             } catch(UserException $e) {
                 $model->setError($e->getCode(), $e->getMessage());

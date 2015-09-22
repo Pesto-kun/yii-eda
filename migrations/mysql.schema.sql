@@ -105,6 +105,7 @@ CREATE TABLE `order` (
   `status` varchar(32) NOT NULL,
   `created` TIMESTAMP NOT NULL,
   `updated` TIMESTAMP NOT NULL,
+  `accepted` TIMESTAMP NOT NULL,
   `restaurant_id` int(11) UNSIGNED,
   `delivery_method` varchar(32) NOT NULL,
   `delivery_time` TIMESTAMP,
