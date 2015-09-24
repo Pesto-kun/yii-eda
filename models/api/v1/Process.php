@@ -214,11 +214,15 @@ class Process extends Model {
             if(!$this->getUserRestaurant()) {
                 $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
 
-                //Проверяем статус ресторана
-                //TODO возможно это надо убрать
+            //Проверяем статус ресторана
+            //TODO возможно это надо убрать
             } elseif(!$this->getUserRestaurant()->restaurant->status) {
                 $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
             }
+
+            //Обвновляем время последнего доступа
+            $this->getUserAccess()->updateLastAccess();
+
         }
     }
 
@@ -230,7 +234,7 @@ class Process extends Model {
         //Если ошибок нет
         if(!$this->hasError()) {
 
-            //TODO вернуть список заказов
+            //Получаем список заказа
             $orders = Order::find()->where([
                 'status' => Order::STATUS_NEW,
                 'restaurant_id' => $this->getUserRestaurant()->restaurant_id
@@ -277,8 +281,6 @@ class Process extends Model {
 
                 $this->setResult('orderList', $return);
 
-                //Обвновляем время последнего доступа
-                $this->getUserAccess()->updateLastAccess();
             }
         }
     }
@@ -296,8 +298,6 @@ class Process extends Model {
             $restaurant->save();
             $this->setResult('updatedAt', date('Y-m-d H:i:s'));
 
-            //Обвновляем время последнего доступа
-            $this->getUserAccess()->updateLastAccess();
         }
     }
 
@@ -329,8 +329,6 @@ class Process extends Model {
                 //Возваращаем время
                 $this->setResult('acceptedAt', $order->accepted);
 
-                //Обвновляем время последнего доступа
-                $this->getUserAccess()->updateLastAccess();
             }
         }
     }
