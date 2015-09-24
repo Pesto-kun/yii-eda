@@ -26,6 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
                 'label' => 'Статус'
             ],
+            [
+                'attribute' => 'Оформление заказов',
+                'value' => function ($data) { return $data->order_available === 1 ? 'Разрешено' : 'Запрещено'; },
+                'label' => 'Статус'
+            ],
             'name',
             [
                 'attribute' => 'city.name',
