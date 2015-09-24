@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Cart;
 use app\models\Dish;
 use app\models\Order;
+use app\models\Restaurant;
 use Exception;
 use Yii;
 
@@ -81,6 +82,7 @@ class CartController extends \yii\web\Controller
         return $this->render('checkout', [
             'order' => $order,
             'dishes' => Dish::findAll(array_keys($cart->getCart())),
+            'restaurant' => Restaurant::findOne($cart->getRestaurantId()),
             'cart' => $cart,
         ]);
     }

@@ -69,7 +69,8 @@ class Order extends \yii\db\ActiveRecord
             [['created', 'updated', 'accepted'], 'safe'],
             [['restaurant_id'], 'integer'],
             [['comment'], 'string'],
-            [['status', 'delivery_cost'], 'string', 'max' => 32],
+            [['total_cost', 'delivery_cost'], 'number', 'numberPattern' => '/^\d+([\.\,]\d{1,2})?$/'],
+            [['status'], 'string', 'max' => 32],
             [['phone', 'username', 'street', 'house', 'apartment'], 'string', 'max' => 255]
         ];
     }
@@ -214,11 +215,12 @@ class Order extends \yii\db\ActiveRecord
         $this->setOrderDatas($orderDatas);
 
         //ID ресторана
-        $this->restaurant_id = $this->getCartModel()->getRestaurant();
+        $this->restaurant_id = $this->getCartModel()->getRestaurantId();
 
-        //TODO Стоимость доставки
-
-        //TODO Стоимость оплаты
+        //Стоимость доставки
+        /** @var Restaurant $restaurant */
+        $restaurant = Restaurant::findOne($this->restaurant_id);
+        $this->delivery_cost = ($total < $restaurant->delivery_free) ? $restaurant->delivery_price : 0;
 
         //Стоимость заказа
         $this->total_cost = $total;

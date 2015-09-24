@@ -41,6 +41,7 @@ $(document).ready(function(){
     $('#checkout-cart').on('click', function(){
 
         var block = $('#checkout-fields');
+        var result = false;
 
         $.ajax({
             url: '/ajax/cart/available',
@@ -52,20 +53,20 @@ $(document).ready(function(){
             },
             success: function(data){
                 if(data.status == 'success') {
-                    return true;
+                    result = true;
                 } else if(data.status = 'error') {
                     var modal = $('#cartModal');
                     modal.find('.modal-body').text(data.message);
                     modal.modal('show');
                 } else {
-                    alert("Unknown error!")
+                    alert("Unknown error!");
                 }
             },
             error: function(data) {
-                alert('Ajax error!')
+                alert('Ajax error!');
             }
         });
         block.hideLoading();
-        return false;
+        return result;
     });
 });

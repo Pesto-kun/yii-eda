@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 /* @var $dishes app\models\Dish[] */
+/* @var $restaurant app\models\Restaurant */
 /* @var $cart app\models\Cart */
 /* @var $order app\models\Order */
 
@@ -67,6 +68,11 @@ $total = 0;
                             </tr>
                             <?php $total += $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?>
                         <?php endforeach; ?>
+                        <tr><td colspan="2">Доставка</td>
+                            <td>
+                                <?= number_format(($total < $restaurant->delivery_free) ? $restaurant->delivery_price : 0); ?> руб.
+                            </td>
+                        </tr>
                         <tr><td colspan="2">Итого</td><td><?= $total ?> руб.</td></tr>
                     </table>
                     <?= $form->field($order, 'comment')->textarea(['rows' => 5]) ?>

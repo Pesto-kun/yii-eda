@@ -3,6 +3,7 @@
 namespace app\controllers\ajax;
 
 use app\models\api\UserAccess;
+use app\models\api\UserRestaurant;
 use Yii;
 use Exception;
 use app\models\Cart;
@@ -104,9 +105,14 @@ class CartController extends \yii\web\Controller
             $cart->checkAvailableToOrder();
 
             //Проверка доступности заведения
-            /** @var UserAccess $userAccess */
-            $userAccess = UserAccess::findOne($cart->getRestaurant());
+            /** @var UserRestaurant $userRestaurant */
+            $userRestaurant = UserRestaurant::findOne(['restaurant_id' => $cart->getRestaurantId()]);
+            if(!$userRestaurant) {
+                throw new UserException('В данный момент заведение недоступно для оформления заказа. Пожалуйста, попробуйте позже.');
+            }
 
+            /** @var UserAccess $userAccess */
+            $userAccess = UserAccess::findOne(['user_id' => $userRestaurant->user_id]);
             if(!$userAccess) {
                 throw new UserException('В данный момент заведение недоступно для оформления заказа. Пожалуйста, попробуйте позже.');
             }

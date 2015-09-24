@@ -73,7 +73,7 @@ class UserAccess extends \yii\db\ActiveRecord
      * @return bool
      */
     protected function _checkTime($sec) {
-        return (time() < (date("U",strtotime($this->last_access)) + $sec));
+        return (time() < (strtotime($this->last_access) + $sec));
     }
 
     /**
@@ -121,6 +121,14 @@ class UserAccess extends \yii\db\ActiveRecord
         $this->session_id = Yii::$app->getSecurity()->generateRandomString();
 
         //Сохраняем изменения
+        $this->save();
+    }
+
+    /**
+     * Обновление последнего доступа
+     */
+    public function updateLastAccess() {
+        $this->last_access = new Expression('NOW()');
         $this->save();
     }
 }

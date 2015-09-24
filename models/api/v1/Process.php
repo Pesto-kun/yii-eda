@@ -271,6 +271,9 @@ class Process extends Model {
                 }
 
                 $this->setResult('orderList', $return);
+
+                //Обвновляем время последнего доступа
+                $this->getUserAccess()->updateLastAccess();
             }
         }
     }
@@ -288,6 +291,9 @@ class Process extends Model {
             $restaurant->order_available = $this->getData(self::FIELD_STATUS);
             $restaurant->save();
             $this->setResult('updatedAt', date('Y-m-d H:i:s'));
+
+            //Обвновляем время последнего доступа
+            $this->getUserAccess()->updateLastAccess();
         }
     }
 
@@ -318,6 +324,9 @@ class Process extends Model {
 
                 //Возваращаем время
                 $this->setResult('acceptedAt', $order->accepted);
+
+                //Обвновляем время последнего доступа
+                $this->getUserAccess()->updateLastAccess();
             }
         }
     }

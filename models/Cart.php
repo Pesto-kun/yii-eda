@@ -20,7 +20,7 @@ class Cart extends Model {
     const COOKIE_RESTAURANT = 'cart_restaurant';
 
     private $_cart = array();
-    private $_restaurant = null;
+    private $_restaurantId = null;
 
     public function init() {
         parent::init();
@@ -33,7 +33,7 @@ class Cart extends Model {
 
             //Получаем ID ресторана
             if(isset($cookies[self::COOKIE_RESTAURANT])) {
-                $this->_restaurant = $cookies->getValue(self::COOKIE_RESTAURANT);
+                $this->_restaurantId = $cookies->getValue(self::COOKIE_RESTAURANT);
             }
         }
     }
@@ -50,8 +50,8 @@ class Cart extends Model {
     /**
      * @return int
      */
-    public function getRestaurant() {
-        return $this->_restaurant;
+    public function getRestaurantId() {
+        return $this->_restaurantId;
     }
 
 
@@ -106,7 +106,7 @@ class Cart extends Model {
 
         //Загружаем данные ресторана
         /** @var Restaurant $restaurant */
-        $restaurant = Restaurant::findOne($this->getRestaurant());
+        $restaurant = Restaurant::findOne($this->getRestaurantId());
 
         //Проверяем возможность заказа в данном ресторане
         if(!$restaurant->order_available) {
@@ -160,10 +160,10 @@ class Cart extends Model {
      * @return bool
      */
     public function checkSameRestaurant($id) {
-        if(is_null($this->_restaurant)) {
-            $this->_restaurant = $id;
+        if(is_null($this->_restaurantId)) {
+            $this->_restaurantId = $id;
         }
-        return $this->_restaurant == $id;
+        return $this->_restaurantId == $id;
     }
 
     /**
@@ -179,7 +179,7 @@ class Cart extends Model {
         ]));
         Yii::$app->response->cookies->add(new Cookie([
             'name' => self::COOKIE_RESTAURANT,
-            'value' => $this->_restaurant,
+            'value' => $this->_restaurantId,
             'expire' => time() + 86400,
         ]));
 
