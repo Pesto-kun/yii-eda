@@ -13,6 +13,7 @@ use app\models\api\UserRestaurant;
 use app\models\Dish;
 use app\models\Order;
 use app\models\OrderData;
+use app\models\Restaurant;
 use yii\base\Model;
 
 class Process extends Model {
@@ -20,6 +21,7 @@ class Process extends Model {
     const FIELD_LOGIN = 'login';
     const FIELD_PASS = 'pass';
     const FIELD_SESSION = 'session';
+    const FIELD_STATUS = 'status';
     const FIELD_ORDER_ID = 'order_id';
 
     protected $_return = array(
@@ -124,6 +126,9 @@ class Process extends Model {
             case 'delivery-list':
                 $required_params = array(self::FIELD_SESSION);
                 break;
+            case 'restaurant-status':
+                $required_params = array(self::FIELD_SESSION, self::FIELD_STATUS);
+                break;
             case 'order-accept':
                 $required_params = array(self::FIELD_SESSION, self::FIELD_ORDER_ID);
                 break;
@@ -151,7 +156,7 @@ class Process extends Model {
         switch($this->getUserAccess()->user->group) {
             case 'restaurant':
 
-                $actions = ['auth', 'orders', 'order-accept'];
+                $actions = ['auth', 'orders', 'order-accept', 'restaurant-status'];
 
                 //Загружаем даныне ресторана пользователя
                 $this->loadUserRestaurant();
@@ -267,6 +272,22 @@ class Process extends Model {
 
                 $this->setResult('orderList', $return);
             }
+        }
+    }
+
+    /**
+     * Обновление статуса заказа
+     */
+    public function changeRestaurantStatus() {
+
+        if(!$this->hasError()) {
+
+            //Загружаем данные ресторана
+            /** @var Restaurant $restaurant */
+            $restaurant = Restaurant::findOne($this->getUserRestaurant()->restaurant_id);
+            $restaurant->order_available = $this->getData(self::FIELD_STATUS);
+            $restaurant->save();
+            $this->setResult('updatedAt', date('Y-m-d H:i:s'));
         }
     }
 

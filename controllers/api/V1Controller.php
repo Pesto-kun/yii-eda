@@ -137,6 +137,36 @@ class V1Controller extends ApiController
     }
 
     /**
+     * Функция отключения\включения возможности рестораном принимать заказы
+     *
+     * @return array
+     */
+    public function actionRestaurantStatus() {
+
+        //Модель для работы с данными
+        $model = $this->getParam();
+
+        //Проверяем наличие ошибок
+        if(!$model->hasError()) {
+
+            try {
+
+                //Изменение статуса заказа
+                $model->changeRestaurantStatus();
+
+            } catch(UserException $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            } catch(Exception $e) {
+                $model->setError($e->getCode(), $e->getMessage());
+            }
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return $model->getReturn();
+
+    }
+
+    /**
      * Принятие заказа
      *
      * @return array
