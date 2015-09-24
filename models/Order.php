@@ -147,6 +147,7 @@ class Order extends \yii\db\ActiveRecord
             self::STATUS_NEW => 'Новый',
             self::STATUS_CANCEL => 'Отменен',
             self::STATUS_PROCESSED => 'Обрабатывается',
+            self::STATUS_DELIVERY_REQUIRED => 'Необходима доставка',
         );
     }
 
@@ -221,6 +222,8 @@ class Order extends \yii\db\ActiveRecord
         /** @var Restaurant $restaurant */
         $restaurant = Restaurant::findOne($this->restaurant_id);
         $this->delivery_cost = ($total < $restaurant->delivery_free) ? $restaurant->delivery_price : 0;
+
+        $total += $this->delivery_cost;
 
         //Стоимость заказа
         $this->total_cost = $total;

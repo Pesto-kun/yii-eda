@@ -70,7 +70,11 @@ $total = 0;
                         <?php endforeach; ?>
                         <tr><td colspan="2">Доставка</td>
                             <td>
-                                <?= number_format(($total < $restaurant->delivery_free) ? $restaurant->delivery_price : 0); ?> руб.
+                                <?php
+                                $delivery_cost = ($total < $restaurant->delivery_free) ? $restaurant->delivery_price : 0;
+                                $total += $delivery_cost;
+                                ?>
+                                <?= $delivery_cost ?> руб.
                             </td>
                         </tr>
                         <tr><td colspan="2">Итого</td><td><?= $total ?> руб.</td></tr>
