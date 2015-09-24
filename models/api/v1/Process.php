@@ -154,20 +154,18 @@ class Process extends Model {
      */
     public function checkActionAccess($action) {
 
-        switch($this->getUserAccess()->user->group) {
-            case 'restaurant':
-
-                $actions = ['auth', 'orders', 'order-accept', 'restaurant-status'];
-
-                //Загружаем даныне ресторана пользователя
-                $this->loadUserRestaurant();
-
-                break;
-            case 'delivery':
-                $actions = ['auth', 'delivery-list'];
-                break;
-            default:
-                $this->setError(Error::ERR_UNKNOWN, 'Unknown user group.');
+        //TODO этот момент возможно надо будет отрефакторить
+        if(!$this->hasError()) {
+            switch($this->getUserAccess()->user->group) {
+                case 'restaurant':
+                    $actions = ['auth','orders','order-accept','restaurant-status'];
+                    break;
+                case 'delivery':
+                    $actions = ['auth','delivery-list'];
+                    break;
+                default:
+                    $this->setError(Error::ERR_UNKNOWN, 'Unknown user group.');
+            }
         }
 
         if(!$this->hasError()) {
@@ -195,6 +193,18 @@ class Process extends Model {
             //Проверяем время с последнего доступа
             } elseif(!$this->getUserAccess()->checkSessionTime()) {
                 $this->setError(Error::ERR_SESSION_EXPIRE, 'Session is expire.');
+            } else {
+
+                //Если пользователь в группе ресторанов
+                if($this->getUserAccess()->user->group == 'restaurant') {
+
+                    //Загружаем даныне ресторана пользователя
+                    $this->loadUserRestaurant();
+
+                }
+
+                //Обвновляем время последнего доступа
+                $this->getUserAccess()->updateLastAccess();
             }
         }
 
@@ -219,9 +229,6 @@ class Process extends Model {
             } elseif(!$this->getUserRestaurant()->restaurant->status) {
                 $this->setError(Error::ERR_RESTAURANT_MISSING, 'User is not assigned restaurant.');
             }
-
-            //Обвновляем время последнего доступа
-            $this->getUserAccess()->updateLastAccess();
 
         }
     }
