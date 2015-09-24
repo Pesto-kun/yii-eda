@@ -33,7 +33,7 @@ $total = 0;
                 <div class="col-md-7">
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <div class="form-group field-order-phone required">
+                            <div class="form-group field-order-city">
                                 <?= Html::label("Город", 'city', ['class' => 'control-label']) ?>
                                 <?= Html::textInput("city", 'Симферополь', ['class' => 'form-control', 'readonly' => true]) ?>
                             </div>
