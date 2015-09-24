@@ -15,6 +15,7 @@ use app\models\Order;
 use app\models\OrderData;
 use app\models\Restaurant;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 class Process extends Model {
 
@@ -139,7 +140,7 @@ class Process extends Model {
 
         //Проверяем наличие обязательных полей
         foreach($required_params as $_name) {
-            if(!$this->getData($_name)) {
+            if(is_null($this->getData($_name))) {
                 $this->setError(Error::ERR_MISSING_REQUIRED_PARAM, 'Required param \''.$_name.'\' is missing');
                 break;
             }
@@ -206,7 +207,8 @@ class Process extends Model {
 
         if(!$this->hasError()) {
             //Поиск необходимого ресторана
-            $this->_userRestaurant = UserRestaurant::findOne(['user_id' => $this->getUserAccess()->user_id]);
+            $this->_userRestaurant = UserRestaurant::find()->where(['user_id' => $this->getUserAccess()->user_id])
+                ->with('restaurant')->one();
 
             //Если пользователю не присвоен ресторан
             if(!$this->getUserRestaurant()) {
@@ -232,7 +234,7 @@ class Process extends Model {
             $orders = Order::find()->where([
                 'status' => Order::STATUS_NEW,
                 'restaurant_id' => $this->getUserRestaurant()->restaurant_id
-            ])->with('dishes')->all();
+            ])->with('dishes')->with('orderDatas')->all();
 
             //Если новые заказы есть
             $return = array();
@@ -243,13 +245,16 @@ class Process extends Model {
                     $address = 'ул.' . $_order->street . ', д.' . $_order->house .
                         ($_order->apartment ? ', кв.'.$_order->apartment : '');
 
+                    //Строим из заказа массив "блюдо" => "количество"
+                    $amounts = ArrayHelper::map($_order->orderDatas, 'dish_id', 'amount');;
+
                     $orderList = array();
-                    /** @var OrderData $_data */
-                    foreach($_order->orderDatas as $_data) {
+                    /** @var Dish $_dish */
+                    foreach($_order->dishes as $_dish) {
                         $orderList[] = [
-                            'dish_id' => $_data->dish_id,
-                            'dish_name' => $_data->dish->name,
-                            'amount' => $_data->amount,
+                            'dish_id' => $_dish->id,
+                            'dish_name' => $_dish->name,
+                            'amount' => $amounts[$_dish->id],
                         ];
                     }
                     $return[] = [
@@ -286,8 +291,7 @@ class Process extends Model {
         if(!$this->hasError()) {
 
             //Загружаем данные ресторана
-            /** @var Restaurant $restaurant */
-            $restaurant = Restaurant::findOne($this->getUserRestaurant()->restaurant_id);
+            $restaurant = $this->getUserRestaurant()->restaurant;
             $restaurant->order_available = $this->getData(self::FIELD_STATUS);
             $restaurant->save();
             $this->setResult('updatedAt', date('Y-m-d H:i:s'));

@@ -185,12 +185,13 @@ class Restaurant extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
 
-        //Удаляем старые данные
-        RestaurantType::deleteAll(['restaurant_id' => $this->id]);
-
         // Получаем все связанные модели, те что загружены или установлены
         $relatedRecords = $this->getRelatedRecords();
         if (isset($relatedRecords['restaurantTypes'])) {
+
+            //Удаляем старые данные
+            RestaurantType::deleteAll(['restaurant_id' => $this->id]);
+
             foreach ($relatedRecords['restaurantTypes'] as $restaurantType) {
                 $this->link('restaurantTypes', $restaurantType);
             }
