@@ -71,7 +71,8 @@ $this->title = 'Batter World';
                                 <div class="text-center"><?= $img ?></div>
                                 <div>Акций не придумано</div>
                                 <div><?= $_restaurant->work_time ?></div>
-                                <div><?= Delivery::getDeliveryTypeName($_restaurant->delivery_type) ?> - <?= $_restaurant->delivery_price ?> руб.</div>
+                                <div>Доставка - <?= $_restaurant->delivery_price ?> руб.</div>
+                                <div>Бесплатная доставка - <?= $_restaurant->delivery_free ?> руб.</div>
                             </div>
                         </div>
                     <?php endforeach; ?>

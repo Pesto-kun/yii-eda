@@ -21,6 +21,8 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
 
     <?= $form->field($model, 'status')->checkbox() ?>
 
+    <?= $form->field($model, 'order_available')->checkbox() ?>
+
     <?= $form->field($model, 'city_id')->dropDownList($cities, ['prompt' => '- Выберите город -'])?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -56,7 +58,7 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
 
     <?= $form->field($model, 'delivery_price') ?>
 
-    <?= $form->field($model, 'delivery_type')->dropDownList(Delivery::getOptions(), ['prompt' => '- Вид доставки -'])?>
+    <?= $form->field($model, 'delivery_free') ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

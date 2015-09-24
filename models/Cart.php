@@ -2,10 +2,10 @@
 
 namespace app\models;
 
-use app\models\Dish;
 use Exception;
 use Yii;
 use yii\base\Model;
+use yii\base\UserException;
 use yii\web\Cookie;
 
 /**
@@ -26,19 +26,15 @@ class Cart extends Model {
         parent::init();
 
         $cookies = Yii::$app->request->cookies;
-        try {
 
-            //Получаем данные корзины из куков
-            if(isset($cookies[self::COOKIE_CART])) {
-                parse_str($cookies->getValue(self::COOKIE_CART), $this->_cart);
+        //Получаем данные корзины из куков
+        if(isset($cookies[self::COOKIE_CART])) {
+            parse_str($cookies->getValue(self::COOKIE_CART), $this->_cart);
 
-                //Получаем ID ресторана
-                if(isset($cookies[self::COOKIE_RESTAURANT])) {
-                    $this->_restaurant = $cookies->getValue(self::COOKIE_RESTAURANT);
-                }
+            //Получаем ID ресторана
+            if(isset($cookies[self::COOKIE_RESTAURANT])) {
+                $this->_restaurant = $cookies->getValue(self::COOKIE_RESTAURANT);
             }
-        } catch(Exception $e) {
-            //TODO
         }
     }
 
@@ -87,6 +83,9 @@ class Cart extends Model {
                 throw new Exception('Невозможно добавить блюдо из другого ресторана');
             }
 
+            //Проверяем возможность рестораном принимать заказы
+            $this->checkAvailableToOrder();
+
             $this->_cart[$id] = $amount;
         } else {
             $this->_cart[$id] += $amount;
@@ -96,6 +95,24 @@ class Cart extends Model {
         $this->saveCartToCookie();
 
         return $this;
+    }
+
+    /**
+     * Проверка возможности рестораном принимать заказы
+     *
+     * @throws UserException
+     */
+    public function checkAvailableToOrder() {
+
+        //Загружаем данные ресторана
+        /** @var Restaurant $restaurant */
+        $restaurant = Restaurant::findOne($this->getRestaurant());
+
+        //Проверяем возможность заказа в данном ресторане
+        if(!$restaurant->order_available) {
+            throw new UserException('В данный момент заказ недоступен в этом заведении. Воспользуйтесь другим заведением.');
+        }
+
     }
 
     /**

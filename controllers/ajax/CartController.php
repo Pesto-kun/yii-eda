@@ -100,6 +100,9 @@ class CartController extends \yii\web\Controller
 
         try {
 
+            //Проверяем возможность рестораном принимать заказы
+            $cart->checkAvailableToOrder();
+
             //Проверка доступности заведения
             /** @var UserAccess $userAccess */
             $userAccess = UserAccess::findOne($cart->getRestaurant());

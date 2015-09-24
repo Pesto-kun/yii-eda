@@ -65,11 +65,11 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['delivery_method', 'payment_method', 'phone', 'username', 'street', 'house'], 'required'],
+            [['phone', 'username', 'street', 'house'], 'required'],
             [['created', 'updated', 'accepted'], 'safe'],
             [['restaurant_id'], 'integer'],
             [['comment'], 'string'],
-            [['status', 'delivery_method', 'delivery_cost', 'payment_method'], 'string', 'max' => 32],
+            [['status', 'delivery_cost'], 'string', 'max' => 32],
             [['phone', 'username', 'street', 'house', 'apartment'], 'string', 'max' => 255]
         ];
     }

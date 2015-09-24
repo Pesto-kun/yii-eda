@@ -30,12 +30,13 @@ $total = 0;
             ]); ?>
             <div class="form-group" id="checkout-fields">
                 <div class="col-md-7">
-                    <div class="col-sm-12">
-                        <?= $form->field($order, 'delivery_method')->radioList([
-                            'self' => 'Самовывоз',
-                            'address' => 'Доставка по адерсу',
-                            'door' => 'Доставка до двери',
-                        ]) ?>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="form-group field-order-phone required">
+                                <?= Html::label("Город", 'city', ['class' => 'control-label']) ?>
+                                <?= Html::textInput("city", 'Симферополь', ['class' => 'form-control', 'readonly' => true]) ?>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <?= $form->field($order, 'phone')->textInput(['placeholder' => '+7(___)___-__-__'])->label('Ваш телефон') ?>
@@ -54,12 +55,6 @@ $total = 0;
                             <?= $form->field($order, 'apartment')->textInput(['placeholder' => 'Кв'])->label('') ?>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <?= $form->field($order, 'payment_method')->radioList([
-                            'offline' => 'Наложенный платеж',
-                            'online' => 'Безналчиный расчет',
-                        ])->label('Выберите способ оплаты') ?>
-                    </div>
                 </div>
                 <div class="col-md-5">
                     <h4>Ваш заказ:</h4>
@@ -67,11 +62,12 @@ $total = 0;
                         <?php foreach($dishes as $_dish): ?>
                             <tr>
                                 <td><?= $_dish->name ?></td>
+                                <td>x <?= $cart->getAmountOfSingleDish($_dish->id) ?></td>
                                 <td><?= $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?> руб.</td>
                             </tr>
                             <?php $total += $_dish->getPrice() * $cart->getAmountOfSingleDish($_dish->id) ?>
                         <?php endforeach; ?>
-                        <tr><td>Итого</td><td><?= $total ?> руб.</td></tr>
+                        <tr><td colspan="2">Итого</td><td><?= $total ?> руб.</td></tr>
                     </table>
                     <?= $form->field($order, 'comment')->textarea(['rows' => 5]) ?>
                 </div>

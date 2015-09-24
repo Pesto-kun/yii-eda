@@ -37,6 +37,7 @@ ALTER TABLE `food_type`
 CREATE TABLE `restaurant` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `status` int(1) NOT NULL DEFAULT '1',
+  `order_available` int(1) NOT NULL DEFAULT '1',
   `city_id` int(11) UNSIGNED,
   `name` varchar(255) NOT NULL,
   `system_name` varchar(255) NOT NULL,
@@ -44,7 +45,7 @@ CREATE TABLE `restaurant` (
   `rating` int(1) UNSIGNED,
   `work_time` varchar(255),
   `delivery_price` decimal(10,2) NOT NULL,
-  `delivery_type` varchar(32),
+  `delivery_free` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 ALTER TABLE `restaurant`
@@ -107,10 +108,10 @@ CREATE TABLE `order` (
   `updated` TIMESTAMP NOT NULL,
   `accepted` TIMESTAMP NOT NULL,
   `restaurant_id` int(11) UNSIGNED,
-  `delivery_method` varchar(32) NOT NULL,
-  `delivery_time` TIMESTAMP,
-  `delivery_cost` varchar(32),
-  `payment_method` varchar(32) NOT NULL,
+#   `delivery_method` varchar(32) NOT NULL,
+#   `delivery_time` TIMESTAMP,
+  `delivery_cost` decimal(10,2),
+#   `payment_method` varchar(32) NOT NULL,
   `total_cost` decimal(10,2) NOT NULL,
 #   `city` varchar(255),
   `phone` varchar(255),

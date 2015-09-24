@@ -6,6 +6,7 @@
 /* @var $dishes \app\models\Dish[] */
 /* @var $cart array */
 use kartik\rating\StarRating;
+use yii\bootstrap\Modal;
 use yii\widgets\Menu;
 use yii\helpers\Html;
 use app\models\Delivery;
@@ -46,7 +47,8 @@ $this->title = $restaurant->name;
                             <div class="text-center"><?= $img ?></div>
                             <div>Акций не придумано</div>
                             <div><?= $restaurant->work_time ?></div>
-                            <div><?= Delivery::getDeliveryTypeName($restaurant->delivery_type) ?> - <?= $restaurant->delivery_price ?> руб.</div>
+                            <div>Доставка - <?= $restaurant->delivery_price ?> руб.</div>
+                            <div>Бесплатная доставка - <?= $restaurant->delivery_free ?> руб.</div>
                         </div>
                     </div>
                 </div>
@@ -108,6 +110,17 @@ $this->title = $restaurant->name;
                 <?php else: ?>
                     <div>Блюд в данной категории не найдено</div>
                 <?php endif; ?>
+            </div>
+
+            <div class="row">
+                <?php
+                Modal::begin([
+                    'header' => 'Ошибка!',
+                    'id' => 'cartModal',
+                ]);
+                echo '...';
+                Modal::end();
+                ?>
             </div>
         </div>
 

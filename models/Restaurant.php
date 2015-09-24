@@ -11,6 +11,7 @@ use yii\web\UploadedFile;
  *
  * @property integer $id
  * @property integer $status
+ * @property integer $order_available
  * @property integer $city_id
  * @property string $name
  * @property string $system_name
@@ -18,7 +19,7 @@ use yii\web\UploadedFile;
  * @property integer $rating
  * @property string $work_time
  * @property float $delivery_price
- * @property string $delivery_type
+ * @property float $delivery_free
  *
  * @property Image $image
  * @property Dish[] $dishes
@@ -44,12 +45,12 @@ class Restaurant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'city_id', 'image_id', 'rating'], 'integer'],
-            [['delivery_price'], 'number', 'numberPattern' => '/^\d+([\.\,]\d{1,2})?$/'],
+            [['status', 'order_available', 'city_id', 'image_id', 'rating'], 'integer'],
+            [['delivery_price', 'delivery_free'], 'number', 'numberPattern' => '/^\d+([\.\,]\d{1,2})?$/'],
             [['name', 'system_name'], 'required'],
             [['system_name'], 'unique', 'targetAttribute' => 'system_name'],
-            [['name', 'work_time', 'delivery_type', 'system_name'], 'string', 'max' => 255],
-            [['delivery_price'], 'default', 'value' => 0],
+            [['name', 'work_time', 'system_name'], 'string', 'max' => 255],
+            [['delivery_price', 'delivery_free'], 'default', 'value' => 0],
         ];
     }
 
@@ -61,6 +62,7 @@ class Restaurant extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'status' => 'Включено',
+            'order_available' => 'Доступно для оформления заказа',
             'city_id' => 'Город',
             'name' => 'Название',
             'system_name' => 'Системное название',
@@ -68,7 +70,7 @@ class Restaurant extends \yii\db\ActiveRecord
             'rating' => 'Рейтинг',
             'work_time' => 'Время работы',
             'delivery_price' => 'Стоимость доставки',
-            'delivery_type' => 'Вид доставки',
+            'delivery_free' => 'Бесплатная доставка',
         ];
     }
 

@@ -23,7 +23,9 @@ function processCart(type, id) {
             if(data.status == 'success') {
                 block.find('.in-cart').text(data.amount);
             } else if(data.status = 'error') {
-                alert(data.message);
+                var modal = $('#cartModal');
+                modal.find('.modal-body').text(data.message);
+                modal.modal('show');
             } else {
                 alert("Unknown error!")
             }
