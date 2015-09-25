@@ -1,0 +1,6 @@
+.loading {
+  margin-right: 35px;
+  background-image: url('../img/loader.gif');
+  background-repeat: no-repeat;
+  background-position: right;
+}

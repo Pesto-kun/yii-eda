@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Visitor;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -53,16 +54,20 @@ class SiteController extends Controller
     public function actionIndex($food = null)
     {
 
+        //Получение города
+        $visitor = new Visitor();
+
         //Получаем список типов заведений
         $foodTypes = FoodType::find()->where(['status' => 1])->with('image')->all();
 
         //Если указан тип еды в заведении
         if($food) {
+            /** @var FoodType $foodType */
             $foodType = FoodType::find()->where(['system_name' => $food])->one();
-            $restaurants = $foodType->restaurants;
+            $restaurants = $foodType->getRestaurants()->andWhere(['city_id' => $visitor->getCity()])->all();
         } else {
             //Получаем список всех заведений
-            $restaurants = Restaurant::find()->where(['status' => 1])->with('image')->all();
+            $restaurants = Restaurant::find()->where(['status' => 1, 'city_id' => $visitor->getCity()])->with('image')->all();
         }
 
         return $this->render('index', [

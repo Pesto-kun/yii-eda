@@ -2,7 +2,8 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
+use app\assets\FrontendAsset;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 //use yii\bootstrap\Nav;
 //use yii\bootstrap\NavBar;
@@ -10,6 +11,9 @@ use yii\helpers\Html;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+//FrontendAsset::register($this);
+$cities = ArrayHelper::map(app\models\City::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');
+$visitor = new \app\models\Visitor();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -31,7 +35,16 @@ AppAsset::register($this);
             <p class="pull-right">Тут будет строка поиска</p>
         </div>
         <div class="well row">
-            <div class="col-sm-4">Заказ еды в Симферополе</div>
+            <div class="col-sm-4">
+                Заказ еды в
+                <?php foreach($cities as $_id => $_city) {
+                    if($visitor->getCity() == $_id) {
+                        print $_city;
+                    } else {
+                        print Html::a($_city, ['visitor/city', 'city_id' => $_id]);
+                    }
+                } ?>
+            </div>
             <div class="col-sm-4"><?= Html::a('Логотип', ['site/index']) ?></div>
             <div class="col-sm-4">+7(978)999-99-99 <?= Html::a('Корзина', ['cart/index']) ?></div>
         </div>
