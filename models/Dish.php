@@ -134,8 +134,12 @@ class Dish extends \yii\db\ActiveRecord
     public function getDiscount() {
         $discount = 0;
 
+        //Если установлена персональная скидка на блюдо
         if($this->discount && time() < $this->discount_date) {
             $discount = $this->discount;
+        //Если установлена скидка на раздел
+        } elseif(isset($this->restaurant->discounts[$this->food_type_id])) {
+            $discount = $this->restaurant->discounts[$this->food_type_id]->discount;
         }
 
         return $discount;

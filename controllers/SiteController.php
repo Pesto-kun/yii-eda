@@ -67,7 +67,7 @@ class SiteController extends Controller
             $restaurants = $foodType->getRestaurants()->andWhere(['city_id' => $visitor->getCity()])->all();
         } else {
             //Получаем список всех заведений
-            $restaurants = Restaurant::find()->where(['status' => 1, 'city_id' => $visitor->getCity()])->with('image')->all();
+            $restaurants = Restaurant::find()->where(['status' => 1, 'city_id' => $visitor->getCity()])->with('image')->with('discounts')->all();
         }
 
         return $this->render('index', [

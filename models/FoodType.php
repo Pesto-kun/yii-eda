@@ -65,7 +65,7 @@ class FoodType extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getRestaurants() {
-        return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])->with('image')
+        return $this->hasMany(Restaurant::className(), ['id' => 'restaurant_id'])->with('image')->with('discounts')
             ->where(['status' => 1])->viaTable('restaurant_type', ['food_type_id' => 'id']);
     }
 

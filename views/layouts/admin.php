@@ -38,6 +38,7 @@ AppAsset::register($this);
         ['label' => 'Города', 'url' => ['/admin/city/index']],
         ['label' => 'Тип еды', 'url' => ['/admin/foodtype/index']],
         ['label' => 'Заведения', 'url' => ['/admin/restaurant/index']],
+        ['label' => 'Скидки', 'url' => ['/admin/discount/index']],
         ['label' => 'Блюда', 'url' => ['/admin/dish/index']],
     ];
     if(Yii::$app->user->can('manageOrders')) {

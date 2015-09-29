@@ -50,7 +50,7 @@ $this->title = 'Batter World';
             <div class="col-md-9">
                 <?php if($restaurants): ?>
                     <?php foreach($restaurants as $_restaurant): ?>
-                        <div class="panel panel-default pull-left">
+                        <div class="panel panel-default pull-left" id="restaurant-<?= $_restaurant->id ?>">
                             <div class="panel-body">
                                 <div>
                                     <?= Html::a($_restaurant->name, ['restaurant/index', 'name' => $_restaurant->system_name])?>
@@ -69,7 +69,9 @@ $this->title = 'Batter World';
                                         ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
                                 <div class="text-center"><?= $img ?></div>
-                                <div>Акций не придумано</div>
+                                <?php if($discount = $_restaurant->getMaxDiscount()): ?>
+                                    <div class="bg-danger">Скидки до <?= $discount?>%</div>
+                                <?php endif; ?>
                                 <div><?= $_restaurant->work_time ?></div>
                                 <div>Доставка - <?= $_restaurant->delivery_price ?> руб.</div>
                                 <div>Бесплатная доставка - <?= $_restaurant->delivery_free ?> руб.</div>

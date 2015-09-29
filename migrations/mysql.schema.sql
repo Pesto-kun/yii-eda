@@ -148,3 +148,24 @@ ALTER TABLE `order_data`
   FOREIGN KEY (`dish_id`)
   REFERENCES `dish` (`id`)
   ON DELETE SET NULL;
+
+#Акции
+CREATE TABLE `discount` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `restaurant_id` int(11) UNSIGNED NOT NULL,
+  `food_type_id` int(11) UNSIGNED NOT NULL,
+  `discount` int(11) UNSIGNED NOT NULL,
+  `discount_date` int(11) UNSIGNED,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`restaurant_id`, `food_type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+ALTER TABLE `discount`
+  ADD CONSTRAINT `discount_restaurant`
+  FOREIGN KEY (`restaurant_id`)
+  REFERENCES `restaurant` (`id`)
+  ON DELETE CASCADE;
+ALTER TABLE `discount`
+  ADD CONSTRAINT `discount_food_type`
+  FOREIGN KEY (`food_type_id`)
+  REFERENCES `food_type` (`id`)
+  ON DELETE CASCADE;

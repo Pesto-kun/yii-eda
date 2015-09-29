@@ -28,6 +28,7 @@ use yii\web\UploadedFile;
  * @property RestaurantType[] $restaurantTypes
  * @property FoodType[] $foodTypes
  * @property User $user
+ * @property Discount[] $discounts
  */
 class Restaurant extends \yii\db\ActiveRecord
 {
@@ -143,6 +144,14 @@ class Restaurant extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id'])->viaTable('api_user_restaurant', ['restaurant_id' => 'id']);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDiscounts() {
+        return $this->hasMany(Discount::className(), ['restaurant_id' => 'id'])->where(['>', 'discount_date', time()])->indexBy('food_type_id');
+    }
+
+
     public function setUser($user) {
         $this->populateRelation('user', $user);
     }
@@ -217,6 +226,24 @@ class Restaurant extends \yii\db\ActiveRecord
             }
             return true;
         }
+    }
+
+    /**
+     * Получение максимальной скидки в заведении
+     *
+     * @return int
+     */
+    public function getMaxDiscount() {
+        $maxDiscount = 0;
+        if($this->discounts) {
+            foreach($this->discounts as $_discount) {
+                if($_discount->discount > $maxDiscount) {
+                    $maxDiscount = $_discount->discount;
+                }
+            }
+        }
+
+        return $maxDiscount;
     }
 
 }

@@ -45,7 +45,6 @@ $this->title = $restaurant->name;
                                 Html::img(DIRECTORY_SEPARATOR . $restaurant->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                             ?>
                             <div class="text-center"><?= $img ?></div>
-                            <div>Акций не придумано</div>
                             <div><?= $restaurant->work_time ?></div>
                             <div>Доставка - <?= $restaurant->delivery_price ?> руб.</div>
                             <div>Бесплатная доставка - <?= $restaurant->delivery_free ?> руб.</div>
@@ -66,8 +65,10 @@ $this->title = $restaurant->name;
                     foreach($menu as $_item) {
                         $img =  is_object($_item->image) ?
                             Html::img(DIRECTORY_SEPARATOR . $_item->image->filepath, ['style' => ['width' => '32px', 'height' => '32px']]) : '';
+                        $discount = isset($restaurant->discounts[$_item->id]) ?
+                            Html::tag('span', '-'.$restaurant->discounts[$_item->id]->discount.'%', ['class' => 'bg-danger pull-right']) : '';
                         $items[] = [
-                            'label' => $img . $_item->name,
+                            'label' => $img . $_item->name . $discount,
                             'url' => ['index', 'name' => $restaurant->system_name, 'food' => $_item->system_name],
                             'active' => ($_item->system_name === $controller->actionParams['food'])
                         ];
