@@ -83,7 +83,7 @@ $this->title = $restaurant->name;
             <div class="col-md-9">
                 <?php if($dishes): ?>
                     <?php foreach($dishes as $_dish): ?>
-                        <div class="panel panel-default pull-left" id="dish-<?= $_dish->id ?>">
+                        <div class="panel panel-default pull-left" id="dish-<?= $_dish->id ?>" style="max-height: 378px">
                             <div class="panel-body">
                                 <div><?= $_dish->name ?></div>
                                 <?php
@@ -91,6 +91,9 @@ $this->title = $restaurant->name;
                                     Html::img(DIRECTORY_SEPARATOR . $_dish->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
                                 <div class="text-center"><?= $img ?></div>
+                                <?php if($_dish->discount): ?>
+                                    <div class="bg-danger" style="position:relative;top:-20px;">Скидка <?= $_dish->discount ?>%</div>
+                                <?php endif; ?>
                                 <div>
                                     <table class="table">
                                         <tr>
