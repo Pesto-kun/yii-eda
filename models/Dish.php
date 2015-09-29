@@ -109,6 +109,21 @@ class Dish extends \yii\db\ActiveRecord
     }
 
     /**
+     * Получение скидки на блюдо
+     *
+     * @return int
+     */
+    public function getDiscount() {
+        $discount = 0;
+
+        if($this->discount) {
+            $discount = $this->discount;
+        }
+
+        return $discount;
+    }
+
+    /**
      * Метод получения цены блюда после всяких обработок с ней
      *
      * @return float
@@ -118,8 +133,8 @@ class Dish extends \yii\db\ActiveRecord
         $price = $this->price;
 
         //Если указана скидка на блюдо
-        if($this->discount) {
-            $price = ceil(($price * (100 - $this->discount))/100);
+        if($this->getDiscount()) {
+            $price = ceil(($price * (100 - $this->getDiscount()))/100);
         }
 
         return $price;

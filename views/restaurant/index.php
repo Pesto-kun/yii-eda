@@ -91,15 +91,16 @@ $this->title = $restaurant->name;
                                     Html::img(DIRECTORY_SEPARATOR . $_dish->image->filepath, ['style' => ['width' => '200px', 'height' => '250px']]) : '';
                                 ?>
                                 <div class="text-center"><?= $img ?></div>
-                                <?php if($_dish->discount): ?>
-                                    <div class="bg-danger" style="position:relative;top:-20px;">Скидка <?= $_dish->discount ?>%</div>
+                                <?php $discount = $_dish->getDiscount(); ?>
+                                <?php if($discount): ?>
+                                    <div class="bg-danger" style="position:relative;top:-20px;">Скидка <?= $discount ?>%</div>
                                 <?php endif; ?>
                                 <div>
                                     <table class="table">
                                         <tr>
                                             <td>Вес:<br/><?= $_dish->weight ?> г.</td>
                                             <td>
-                                                <?php if($_dish->discount): ?>
+                                                <?php if($discount): ?>
                                                     <s><?= $_dish->price ?></s> руб.<br>
                                                 <?php endif; ?>
                                                 <?= $_dish->getPrice() ?> руб.
