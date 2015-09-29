@@ -210,7 +210,7 @@ class Order extends \yii\db\ActiveRecord
             $orderData->amount = $amount;
             $orderDatas[] = $orderData;
 
-            $total += $amount * $dishes[$id]->price;
+            $total += $amount * $dishes[$id]->getPrice();
         }
 
         $this->setOrderDatas($orderDatas);

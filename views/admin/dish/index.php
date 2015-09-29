@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'weight',
             'price',
-
+            'discount',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['width' => '80'],

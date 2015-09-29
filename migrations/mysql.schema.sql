@@ -87,6 +87,7 @@ CREATE TABLE `dish` (
   `image_id` int(11) UNSIGNED,
   `weight` int(11) UNSIGNED,
   `price` decimal(10,2) NOT NULL,
+  `discount` int(11) UNSIGNED,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 ALTER TABLE `dish`

@@ -17,13 +17,21 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'status')->checkbox() ?>
+    <div class="col-sm-12">
+        <?= $form->field($model, 'status')->checkbox() ?>
+    </div>
 
-    <?= $form->field($model, 'restaurant_id')->dropDownList($restaurants, ['prompt' => '- Не выбрано -'])?>
+    <div class="col-sm-6">
+        <?= $form->field($model, 'restaurant_id')->dropDownList($restaurants, ['prompt' => '- Не выбрано -'])?>
+    </div>
 
-    <?= $form->field($model, 'food_type_id')->dropDownList($foodTypes, ['prompt' => '- Не выбрано -'])?>
+    <div class="col-sm-6">
+        <?= $form->field($model, 'food_type_id')->dropDownList($foodTypes, ['prompt' => '- Не выбрано -'])?>
+    </div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-12">
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    </div>
 
     <?php
     $pluginOptions = [
@@ -36,13 +44,23 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
         $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
     }
     ?>
-    <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    <div class="col-sm-12">
+        <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    </div>
 
-    <?= $form->field($model, 'weight')->textInput()->hint(Yii::t('app', 'gram')) ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'weight')->textInput()->hint(Yii::t('app', 'gram')) ?>
+    </div>
 
-    <?= $form->field($model, 'price')->textInput(['maxlength' => true])->hint(Yii::t('app', 'rub.'))  ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'price')->textInput(['maxlength' => true])->hint('рублей')  ?>
+    </div>
 
-    <div class="form-group">
+    <div class="col-sm-4">
+        <?= $form->field($model, 'discount')->textInput(['maxlength' => true])->hint('%')  ?>
+    </div>
+
+    <div class="col-sm-12">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 

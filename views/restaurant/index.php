@@ -95,7 +95,12 @@ $this->title = $restaurant->name;
                                     <table class="table">
                                         <tr>
                                             <td>Вес:<br/><?= $_dish->weight ?> г.</td>
-                                            <td><?= $_dish->price ?> руб.</td>
+                                            <td>
+                                                <?php if($_dish->discount): ?>
+                                                    <s><?= $_dish->price ?></s> руб.<br>
+                                                <?php endif; ?>
+                                                <?= $_dish->getPrice() ?> руб.
+                                            </td>
                                             <td>
                                                 <?= Html::a('-', null, ['onclick' => 'processCart("reduce",'.$_dish->id.')'])?>
                                                 <span class="in-cart"><?= isset($cart[$_dish->id]) ? $cart[$_dish->id] : 0 ?></span>

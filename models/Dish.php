@@ -15,6 +15,7 @@ use Yii;
  * @property integer $image_id
  * @property integer $weight
  * @property float $price
+ * @property integer $discount
  *
  * @property Image $image
  * @property Restaurant $restaurant
@@ -36,9 +37,11 @@ class Dish extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'restaurant_id', 'food_type_id', 'image_id', 'weight'], 'integer'],
+            [['status', 'restaurant_id', 'food_type_id', 'image_id', 'weight', 'discount'], 'integer'],
             [['name', 'price'], 'required'],
             [['price'], 'number'],
+            [['discount'], 'number', 'min' => 0, 'max' => 100],
+            [['discount'], 'default', 'value' => 0],
             [['name'], 'string', 'max' => 255]
         ];
     }
@@ -55,6 +58,7 @@ class Dish extends \yii\db\ActiveRecord
             'name' => 'Название',
             'weight' => 'Вес',
             'price' => 'Цена',
+            'discount' => 'Скидка',
         ];
     }
 
@@ -110,6 +114,14 @@ class Dish extends \yii\db\ActiveRecord
      * @return float
      */
     public function getPrice() {
-        return $this->price;
+
+        $price = $this->price;
+
+        //Если указана скидка на блюдо
+        if($this->discount) {
+            $price = ceil(($price * (100 - $this->discount))/100);
+        }
+
+        return $price;
     }
 }
