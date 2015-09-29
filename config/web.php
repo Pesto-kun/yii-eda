@@ -7,6 +7,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'timeZone' => 'Europe/Moscow',
+    'language' => 'ru',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -52,6 +53,12 @@ $config = [
         'authManager' => [
             'class' => 'yii\rbac\PhpManager',
             'defaultRoles' => ['admin', 'manager', 'api'],
+        ],
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'php:d.m.Y',
+            'datetimeFormat' => 'php:d.m.Y H:i:s',
+            'timeFormat' => 'php:H:i:s',
         ],
     ],
     'params' => $params,

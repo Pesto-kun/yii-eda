@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'foodType.name',
-                'label' => 'Вид еды'
+                'label' => 'Категория'
             ],
             'name',
             'weight',

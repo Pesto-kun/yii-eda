@@ -16,6 +16,7 @@ use Yii;
  * @property integer $weight
  * @property float $price
  * @property integer $discount
+ * @property integer $discount_date
  *
  * @property Image $image
  * @property Restaurant $restaurant
@@ -42,7 +43,8 @@ class Dish extends \yii\db\ActiveRecord
             [['price'], 'number'],
             [['discount'], 'number', 'min' => 0, 'max' => 100],
             [['discount'], 'default', 'value' => 0],
-            [['name'], 'string', 'max' => 255]
+            [['name'], 'string', 'max' => 255],
+            [['discount_date'], 'validateDate'],
         ];
     }
 
@@ -54,12 +56,19 @@ class Dish extends \yii\db\ActiveRecord
         return [
             'status' => 'Включено',
             'restaurant_id' => 'Заведение',
-            'food_type_id' => 'Вид еды',
+            'food_type_id' => 'Категория',
             'name' => 'Название',
             'weight' => 'Вес',
             'price' => 'Цена',
             'discount' => 'Скидка',
         ];
+    }
+
+    public function validateDate($attribute, $params)
+    {
+        if(!preg_match('/^\d{2}\.\d{2}\.\d{4}$/', $this->$attribute)) {
+            $this->addError($attribute, 'Неверный формат даты. Дата дожна быть в формате DD-MM-YYYY.');
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 <?php
-
+use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
@@ -14,11 +14,24 @@ use kartik\file\FileInput;
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'status')->checkbox() ?>
+    <div class="col-sm-12">
+        <?= $form->field($model, 'status')->widget(SwitchInput::classname(), [
+            'pluginOptions' => [
+                'onColor' => 'success',
+                'offColor' => 'danger',
+                'onText' => 'Да',
+                'offText' => 'Нет',
+            ]
+        ]) ?>
+    </div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-8">
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+    </div>
 
     <?php
         $pluginOptions = [
@@ -31,10 +44,12 @@ use kartik\file\FileInput;
             $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
         }
     ?>
-    <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    <div class="col-sm-12">
+        <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    </div>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="col-sm-12">
+        <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Сохранить изменения', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

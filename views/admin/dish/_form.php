@@ -1,13 +1,15 @@
 <?php
-use kartik\file\FileInput;
+use kartik\widgets\ActiveForm;
+use kartik\widgets\DatePicker;
+use kartik\widgets\FileInput;
+use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Dish */
 /* @var $image app\models\Image */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form kartik\widgets\ActiveForm */
 
 $restaurants = ArrayHelper::map(app\models\Restaurant::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');
 $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');
@@ -18,7 +20,14 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <div class="col-sm-12">
-        <?= $form->field($model, 'status')->checkbox() ?>
+        <?= $form->field($model, 'status')->widget(SwitchInput::classname(), [
+            'pluginOptions' => [
+                'onColor' => 'success',
+                'offColor' => 'danger',
+                'onText' => 'Да',
+                'offText' => 'Нет',
+            ]
+        ]) ?>
     </div>
 
     <div class="col-sm-6">
@@ -49,19 +58,36 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
     </div>
 
     <div class="col-sm-4">
-        <?= $form->field($model, 'weight')->textInput()->hint(Yii::t('app', 'gram')) ?>
+        <?= $form->field($model, 'price', ['addon' => ['append' => ['content'=>'рублей']]])->textInput(['maxlength' => true]) ?>
     </div>
 
     <div class="col-sm-4">
-        <?= $form->field($model, 'price')->textInput(['maxlength' => true])->hint('рублей')  ?>
+        <?= $form->field($model, 'discount', ['addon' => ['append' => ['content'=>'%']]])->textInput(['maxlength' => true])  ?>
     </div>
 
     <div class="col-sm-4">
-        <?= $form->field($model, 'discount')->textInput(['maxlength' => true])->hint('%')  ?>
+        <?php if($model->discount_date) {$model->discount_date = Yii::$app->formatter->asDate($model->discount_date, 'php:d.m.Y');} ?>
+        <?= $form->field($model, 'discount_date')->widget(DatePicker::classname(), [
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
+            'pickerButton' =>false,
+            'options' => [
+                'placeholder' => 'Выбрать дату'
+            ],
+            'pluginOptions' => [
+                'todayHighlight' => true,
+                'autoclose'=>true,
+                'format' => 'dd.mm.yyyy',
+            ]
+        ]) ?>
+    </div>
+
+
+    <div class="col-sm-4">
+        <?= $form->field($model, 'weight', ['addon' => ['append' => ['content'=>'грамм']]])->textInput() ?>
     </div>
 
     <div class="col-sm-12">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить изменения', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

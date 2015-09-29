@@ -1,5 +1,5 @@
 <?php
-
+use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -12,7 +12,14 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'status')->checkbox() ?>
+    <?= $form->field($model, 'status')->widget(SwitchInput::classname(), [
+        'pluginOptions' => [
+            'onColor' => 'success',
+            'offColor' => 'danger',
+            'onText' => 'Да',
+            'offText' => 'Нет',
+        ]
+    ]) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
