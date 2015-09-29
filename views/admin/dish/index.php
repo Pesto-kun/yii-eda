@@ -22,8 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             [
+                'format'=>'raw',
                 'attribute' => 'status',
-                'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
+                'value' => function ($data) {
+                    return $data->status ?
+                        '<span class="label label-success">Активно</span>' :
+                        '<span class="label label-danger">Неактивно</span>';
+                },
                 'label' => 'Статус'
             ],
             [

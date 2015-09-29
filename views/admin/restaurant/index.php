@@ -22,14 +22,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             [
+                'format'=>'raw',
                 'attribute' => 'status',
-                'value' => function ($data) { return $data->status === 1 ? 'Включено' : 'Отключено'; },
+                'value' => function ($data) {
+                    return $data->status ?
+                        '<span class="label label-success">Активно</span>' :
+                        '<span class="label label-danger">Неактивно</span>';
+                },
                 'label' => 'Статус'
             ],
             [
-                'attribute' => 'Оформление заказов',
-                'value' => function ($data) { return $data->order_available === 1 ? 'Разрешено' : 'Запрещено'; },
-                'label' => 'Статус'
+                'format'=>'raw',
+                'attribute' => 'order_available',
+                'value' => function ($data) {
+                    return $data->order_available ?
+                        '<span class="label label-success">Разрешено</span>' :
+                        '<span class="label label-danger">Запрещено</span>';
+                },
+                'label' => 'Оформление заказов'
             ],
             'name',
             [
