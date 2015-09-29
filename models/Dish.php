@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use DateTime;
 use Yii;
 
 /**
@@ -102,6 +103,14 @@ class Dish extends \yii\db\ActiveRecord
 //        return $this->hasMany(OrderData::className(), ['dish_id' => 'id']);
 //    }
 
+    public function beforeSave($insert) {
+        if($this->discount_date) {
+            $dateFrom = DateTime::createFromFormat('d.m.Y', $this->discount_date);
+            $this->discount_date = $dateFrom->getTimestamp();
+        }
+        return parent::beforeSave($insert);
+    }
+
     public function setImage($image)
     {
         $this->populateRelation('image', $image);
@@ -125,7 +134,7 @@ class Dish extends \yii\db\ActiveRecord
     public function getDiscount() {
         $discount = 0;
 
-        if($this->discount) {
+        if($this->discount && time() < $this->discount_date) {
             $discount = $this->discount;
         }
 
