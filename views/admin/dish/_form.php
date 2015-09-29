@@ -45,12 +45,16 @@ $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1]
     <?php
     $pluginOptions = [
         'showPreview' => true,
-        'showCaption' => true,
-        'showRemove' => true,
+        'showCaption' => false,
+        'showRemove' => false,
         'showUpload' => false,
+        'browseClass' => 'btn btn-success btn-block',
+        'browseIcon' => '<i class="glyphicon glyphicon-file"></i> ',
+        'browseLabel' =>  'Select icon'
     ];
     if($model->image_id) {
         $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
+        $pluginOptions['browseClass'] = 'btn btn-default btn-block';
     }
     ?>
     <div class="col-sm-12">

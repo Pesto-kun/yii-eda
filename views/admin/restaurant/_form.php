@@ -1,8 +1,8 @@
 <?php
+use kartik\helpers\Html;
 use kartik\widgets\ActiveForm;
 use kartik\widgets\FileInput;
 use kartik\widgets\SwitchInput;
-use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -12,7 +12,7 @@ use yii\helpers\ArrayHelper;
 
 $cities = ArrayHelper::map(app\models\City::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');
 $foodTypes = ArrayHelper::map(app\models\FoodType::find()->where(['status' => 1])->asArray()->all(), 'id', 'name');
-$users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group' => 'api'])->asArray()->all(), 'id', 'username');
+$users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group' => 'restaurant'])->asArray()->all(), 'id', 'username');
 ?>
 
 <div class="restaurant-form">
@@ -64,18 +64,34 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
     </div>
 
     <div class="col-sm-4">
-        <?= $form->field($model, 'user')->dropDownList($users, ['prompt' => ' - Не указан -'])->label('Привязать пользователя') ?>
+        <?= $form->field($model, 'user')->widget(\kartik\widgets\Select2::className(), [
+            'language' => 'ru',
+            'data' => $users,
+            'options' => ['placeholder' => 'Привязать пользователя...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+            'addon' => [
+                'prepend' => [
+                    'content' => Html::icon('user'),
+                ],
+            ]
+        ]); ?>
     </div>
 
     <?php
     $pluginOptions = [
         'showPreview' => true,
-        'showCaption' => true,
-        'showRemove' => true,
+        'showCaption' => false,
+        'showRemove' => false,
         'showUpload' => false,
+        'browseClass' => 'btn btn-success btn-block',
+        'browseIcon' => '<i class="glyphicon glyphicon-file"></i> ',
+        'browseLabel' =>  'Select icon'
     ];
     if($model->image_id) {
         $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
+        $pluginOptions['browseClass'] = 'btn btn-default btn-block';
     }
     ?>
     <div class="col-sm-12">
@@ -87,7 +103,7 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
     </div>
 
     <div class="col-sm-4">
-        <?= $form->field($model, 'work_time')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'work_time', ['addon' => ['prepend' => ['content'=>Html::icon('time')]]])->textInput(['maxlength' => true]) ?>
     </div>
 
     <div class="col-sm-4">
