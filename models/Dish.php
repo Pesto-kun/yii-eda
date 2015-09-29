@@ -132,7 +132,7 @@ class Dish extends \yii\db\ActiveRecord
 
         $price = $this->price;
 
-        //Если указана скидка на блюдо
+        //Если указана скидка
         if($this->getDiscount()) {
             $price = ceil(($price * (100 - $this->getDiscount()))/100);
         }

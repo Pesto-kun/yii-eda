@@ -19,17 +19,39 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'status')->checkbox() ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'status')->checkbox() ?>
+    </div>
 
-    <?= $form->field($model, 'order_available')->checkbox() ?>
+    <div class="col-sm-8">
+        <?= $form->field($model, 'order_available')->checkbox() ?>
+    </div>
 
-    <?= $form->field($model, 'city_id')->dropDownList($cities, ['prompt' => '- Выберите город -'])?>
+    <div class="col-sm-8">
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'system_name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'city_id')->dropDownList($cities, ['prompt' => '- Выберите город -'])?>
+    </div>
 
-    <?= $form->field($model, 'user')->dropDownList($users, ['prompt' => ' - Не указан -'])->label('Привязать пользователя') ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'rating')->dropDownList(array(
+            1 => '1 звезда',
+            2 => '2 звезды',
+            3 => '3 звезды',
+            4 => '4 звезды',
+            5 => '5 звезд',
+        ), ['prompt' => '- Рейтинг -']) ?>
+    </div>
+
+    <div class="col-sm-4">
+        <?= $form->field($model, 'user')->dropDownList($users, ['prompt' => ' - Не указан -'])->label('Привязать пользователя') ?>
+    </div>
 
     <?php
     $pluginOptions = [
@@ -42,25 +64,27 @@ $users = ArrayHelper::map(app\models\User::find()->where(['status' => 1, 'group'
         $pluginOptions['initialPreview'] = [Html::img($image->getInitialPreview(), ['class'=>'file-preview-image'])];
     }
     ?>
-    <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    <div class="col-sm-12">
+        <?= $form->field($image, 'file')->widget(FileInput::className(), ['pluginOptions' => $pluginOptions])->label('Иконка') ?>
+    </div>
 
-    <?= $form->field($model, 'rating')->dropDownList(array(
-        1 => '1 звезда',
-        2 => '2 звезды',
-        3 => '3 звезды',
-        4 => '4 звезды',
-        5 => '5 звезд',
-    ), ['prompt' => '- Рейтинг -']) ?>
+    <div class="col-sm-12">
+        <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes)->label('Категории') ?>
+    </div>
 
-    <?= $form->field($model, 'foodTypes')->checkboxList($foodTypes)->label('Вид еды') ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'work_time')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'work_time')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'delivery_price') ?>
+    </div>
 
-    <?= $form->field($model, 'delivery_price') ?>
+    <div class="col-sm-4">
+        <?= $form->field($model, 'delivery_free') ?>
+    </div>
 
-    <?= $form->field($model, 'delivery_free') ?>
-
-    <div class="form-group">
+    <div class="col-sm-12">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Обновить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
